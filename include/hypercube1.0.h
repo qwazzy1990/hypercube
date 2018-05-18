@@ -8,13 +8,13 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "..//..//String/include/String.h"
-#include "..//..//utilities/include/utilities.h"
-
+#include "String.h"
+#include "utilities.h"
+#include "HashMap.h"
 
 #define destroy_vertex(myarg) destroy_vertex_real(&myarg)
 
-enum vs{OK, DEAD_END, SEED, DNE, DNF};
+enum vs{DEAD_END, SEED};
 typedef enum vs VertexStatus;
 
 struct hc{
@@ -61,7 +61,7 @@ CubeVertex new_vertex(char* s);
 							/**
 							 * Fucntion to set the neighbors of a CubeVertex
 							 * */
-VertexStatus set_neighbors(CubeVertex v);
+char** generate_neighbors(char* v);
 
 
 
@@ -69,12 +69,22 @@ VertexStatus set_neighbors(CubeVertex v);
 
 							
 							/*****PRINTERS*********/
-char* print_vertex(CubeVertex v);
+char* print_vertex(AnyData v);
 
 
 
 						/***********DESTROYERS*************/
 
-void destroy_vertex_real(CubeVertex* d);
+void destroy_vertex_real(AnyData* d);
+
+
+						/**************CLONERS***********/
+
+CubeVertex clone_vertext(CubeVertex v);
+
+
+						/**********BACK TRACKING ALGORITHM************/
+void back_track(HashMap map, char* key, int currentLevel, int maxDepth);
+
 #endif
 
