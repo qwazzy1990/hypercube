@@ -5,7 +5,7 @@
 #include <assert.h>
 #include "utilities.h"
 
-void swap(void* a, void* b, swap_func s)
+void swap(void* a, void* b, SwapFunc s)
 {
      s(a, b);
 }
@@ -23,7 +23,7 @@ void swapInts(void* a, void* b)
 
 
 
-int compare(void* a, void* b, compare_func c)
+int compare(void* a, void* b, CompareFunc c)
 {
   return c(a, b);
 }

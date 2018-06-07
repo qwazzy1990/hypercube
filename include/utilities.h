@@ -9,6 +9,14 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+
+#define mem_alloc(myarg, size) myarg = calloc(size, sizeof(*myarg))
+#define resize(myarg, size) myarg = realloc(myarg, sizeof(*myarg)*size)
+#define for_each(index, number) for(int index=0; index<number; index++)
+
+
+
 enum type {INT, CHAR, BOOL, DOUBLE, LONG, FLOAT, UNSIGNED_INT};
 typedef enum type Primitive;
 
@@ -25,10 +33,11 @@ struct i{
 		   pointer to swap function, compare function, print function and delete function
 		 *
 		 * **/
-typedef void (*swap_func)(AnyData a, AnyData b);
-typedef int (*compare_func)(AnyData a, AnyData b);
-typedef char* (*print_func)(AnyData data);
-typedef void (*delete_func)(AnyData data);
+typedef void (*SwapFunc)(AnyData a, AnyData b);
+typedef int (*CompareFunc)(AnyData a, AnyData b);
+typedef char* (*PrintFunc)(AnyData data);
+typedef void (*DeleteFunc)(AnyData data);
+typedef void* (*CloneFunc)(AnyData data);
 		/**
 		 *Typedef for void*
 		 * **/
@@ -37,7 +46,7 @@ typedef void (*delete_func)(AnyData data);
 		/**
 		 * Swapping functions
 		 * **/
-void swap(AnyData a, AnyData b, swap_func s);
+void swap(AnyData a, AnyData b, SwapFunc s);
 
 void swapInts(AnyData a, AnyData b);
 
@@ -52,7 +61,7 @@ void swapDoubles(AnyData a, AnyData b);
 		 * Comparing Functions
 		 * **/
 
-int compare(AnyData a, AnyData b, compare_func c);
+int compare(AnyData a, AnyData b, CompareFunc c);
 
 
 

@@ -136,7 +136,7 @@ static unsigned long table_size[] = {
 
 
 
-HashMap new_hashmap(print_func p, delete_func d, unsigned int sizeOfTable)
+HashMap new_hashmap(PrintFunc p, DeleteFunc d, unsigned int sizeOfTable)
 {
     int max = sizeof(table_size)/sizeof(table_size[0]);
     int index = 0;

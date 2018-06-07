@@ -12,9 +12,12 @@
 bool debug1 = false;
 bool debug2 = false;
 bool debug3  = false;
-bool debug4 = true;
+bool debug4 = false;
+bool debug5 = false;
+bool debug6 = false;
+bool debug7 = true;
 
-unsigned long hashes[100] = {-1};
+
 
 void delete_vertex(AnyData v)
 {
@@ -25,26 +28,30 @@ void delete_vertex(AnyData v)
    v1 = NULL;
 
 }
-int main(int argc, char* argv[])
+int main(int argc, String argv[])
 {
   
   if(debug1){
     /*CubeVertex v1 = generate_seed(5, 2);
-    char* printer = print_vertex(v1);
+    String printer = print_vertex(v1);
     printf("printer is %s\n", printer);
     destroystring(printer);
     destroy_vertex(v1);*/
     CubeVertecies v =  generate_vertecies(3, 1);
     int i = 0;
     while(v[i] != NULL){
-      char* s = print_vertex(v[i]);
-      printf("here %s\n", s);
+      String s = print_vertex(v[i]);
+      printf("vertex %s\n", s);
+      delete_vertex(v[i]);
+      destroystring(s);
+      i++;
     }
+    free(v);
   }
   if(debug2){
     CubeVertecies v = generate_vertecies(5, 3);
     for(int i = 0; i < 10; i++){
-      char* printer = print_vertex(v[i]);
+      String printer = print_vertex(v[i]);
       printf("vertex |%d| %s\n", i, printer);
       destroystring(printer);
     }
@@ -58,35 +65,30 @@ int main(int argc, char* argv[])
       CubeVertecies l = generate_vertecies(5, 3);
       ErrorCode mapStatus = 0;
     
-      for(int i = 0; i < 10; i++)
+      for_each(x, 10)
       {
-         mapStatus = put_hashmap(map, k[i]->string, k[i]);
+         mapStatus = put_hashmap(map, k[x]->string, k[x]);
          print_error_code(mapStatus);
       }
-      for(int i = 0; i < 10; i++){
-        mapStatus = put_hashmap(map, l[i]->string, l[i]);
+      for_each(x, 10){
+        mapStatus = put_hashmap(map, l[x]->string, l[x]);
         print_error_code(mapStatus);
       }
-      int count = 0;
-      for(int i = 0; i < 20; i++){
-        if(i < 10){
-          hashes[i] = hash(map, k[i]->string);
-          printf("%ld ", hashes[i]);
-        }
-        else{ 
-          hashes[i] = hash(map, l[count]->string);
-          printf("%ld", hashes[i]);
-          count++;
-        }
-      }
+      printf("\n");
+      CubeVertex temp = map->table[hash(map, "00111")]->data;
+      temp->seed = false;
+      String seed = stringcopy("00011");
+      back_track(map, seed, 1, '0', 20);
+      //free(k);
+      //free(l);
+      destroystring(seed);
+      destroy_hashmap(map);
       free(k);
       free(l);
-      printf("\n");
-      destroy_hashmap(map);
 
   }
   if(debug4){
-    char** neighbors = generate_neighbors("00101");
+    Strings neighbors = generate_neighbors("00101");
     int i = 0;
     while(neighbors[i] != NULL){
       printf("%s\n", neighbors[i]);
@@ -96,6 +98,35 @@ int main(int argc, char* argv[])
     destroystringarray(neighbors);
     
   }
+  if(debug5){
+    
+    //generate_hamiltonian_paths(5, 2);
+    String temp = stringcopy("00011");
+    String temp2 = stringcopy("00101");
+    //temp = one_dyk_word(temp);
+    //printf("%s\n", temp);
+    //destroystring(temp);
+    Strings cycle = cyclic_decomposition(temp);
+    Strings cycle2 = cyclic_decomposition(temp2);
+    String printer = printstringarray(cycle);
+    String printer2 = printstringarray(cycle2);
+    printer = stringcat(printer, printer2);
+    destroystring(printer2);
+    printf("%s\n", printer);
+
+    destroystring(temp);
+    destroystring(temp2);
+    destroystringarray(cycle2);
+    destroystringarray(cycle);
+    destroystring(printer);
+    
+  }
+  if(debug6){
   
+    generate_hamiltonian_paths(7, 3);
+  }
+  if(debug7){
+    test_7();
+  }
   return 0;
 }

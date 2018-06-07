@@ -1,5 +1,5 @@
-#ifndef _STRING_
-#define _STRING_
+#ifndef _string_
+#define _string_
 
 #include <stdio.h>
 #include <string.h>
@@ -25,12 +25,14 @@
 
 
 
+typedef char* String;
+typedef String* Strings;
       
 
           /**
               Converts a file to a string
           **/
-char* readfile(FILE* fp);
+String readfile(FILE* fp);
 
 
 
@@ -39,40 +41,40 @@ char* readfile(FILE* fp);
                         /**PARSING FUNCTIONS********/
 
 /**
-    Input: String and delimiters
+    Input: string and delimiters
     Output: Array of strings parsed from  original string based on delimiter(s)
 **/
-char** stringsplit(char* s, char* delims);
+Strings stringsplit(String s, String delims);
 /**
     Helper function to check if a character is a delimiter
 **/
-bool isdelim(char c, char* delims);
+bool isdelim(char c, String delims);
 
 
 
                   /****CONSTRUCTORS**********/
 /**
       Input: void
-      Output: Memory allocated for a char*
+      Output: Memory allocated for a string
       size = max_size
 **/
 
-char* createvoidstring(void);
+String createvoidstring(void);
 
 
 /**
-      Input: String
+      Input: string
       Output: new string = to size of s
 **/
 
-char* createstring(char* s);
+String createstring(String s);
 
 
 /**
     Input: size
     Output: null-terminated string = to size
 **/
-char* createnstring(unsigned int size);
+String createnstring(unsigned int size);
 
 
 
@@ -85,7 +87,7 @@ char* createnstring(unsigned int size);
     creates a null terminated string matrix of DEFAULT_SIZE by DEFAULT_SIZE
     Terminates matrix with NULL
 **/
-char** createvoidstringarray( void );
+Strings createvoidstringarray( void );
 
 
 
@@ -98,18 +100,20 @@ char** createvoidstringarray( void );
                       /***********DESTROYERS****************/
 
 /**
-    Input: String
+    Input: string
     Output: freed string
 **/
 
-void destroystring_real(char** s);
+void destroystring_real(Strings s);
 
 /**
-   Input: Stringarray
+   Input: stringarray
    Output: N/A
-   Postconditions: String array is freed
+   Postconditions: string array is freed
 **/
-void destroystringarray_real(char*** s);
+void destroystringarray_real(Strings* s);
+
+int remove_from_stringarray(Strings a, String s);
 
 
 
@@ -124,16 +128,16 @@ void destroystringarray_real(char*** s);
    Input: source string
    Output: newstring with content of source
 **/
-char* stringcopy(char* source);
+String stringcopy(String source);
 
-char* stringncopy(char* source, int n);
+String stringncopy(String source, int n);
 
 /**
     Function to copy the contents of one string array to another
     Preconditions: Source must exist and contain content
     Postconditions: Source is unchanged, copy of source is returned
 **/
-char** stringarraycopy(char** s);
+Strings stringarraycopy(Strings s);
 
 
 
@@ -145,7 +149,7 @@ char** stringarraycopy(char** s);
       > than length of source.
       Postconditions: Source is unchanged, copy of segment of source is returned
     **/
-char* stringsegmentcopy(char* s, unsigned int start, unsigned int end);
+String stringsegmentcopy(String s, unsigned int start, unsigned int end);
 
 
         /**
@@ -157,7 +161,7 @@ char* stringsegmentcopy(char* s, unsigned int start, unsigned int end);
             The start must be > 0.
             Post conditions: Source is unchanged, copy of segment of source is returned
         **/
-char** stringarraysegmentcopy(char** s, unsigned int start, unsigned int end);
+Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end);
 
 
 
@@ -171,7 +175,7 @@ char** stringarraysegmentcopy(char** s, unsigned int start, unsigned int end);
 
    Postconditions: Source is unchanged. Destination is modified with source appended
 **/
-char* stringcat(char* dest, char* source);
+String stringcat(String dest, String source);
 
 
 /**
@@ -179,27 +183,29 @@ char* stringcat(char* dest, char* source);
     Preconditions: The data must be numeric, i.e. floating point or integer
     Postconditions: A string containing the data is returned
 **/
-char* tostring(Primitive type, void* data);
+String tostring(Primitive type, void* data);
 
 
 /**
     Function to reverse the order of a string
-    Preconditions: String muest not be empty or null
+    Preconditions: string muest not be empty or null
     Postconditions: New string in reverse order. s is freed
 **/
-char* reversestring(char* s);
+String reversestring(String s);
 
+int add_to_stringarray(Strings a, String s);
 
+void replace_in_string(String s, char c, int index);
 
                         /*************PRINT FUNCTIONS**************/
 
   /**
     Function to convert a string array to a string.
-    Preconditions: String array must exist and be non-empty
+    Preconditions: string array must exist and be non-empty
     Postconidtions: a string returned concatenated with all the strings of
     the stringarray. string array remains unchanged.
   **/
-char* printstringarray(char** s);
+String printstringarray(Strings s);
 
 
                         /**************VALIDATORS**********/
@@ -208,11 +214,11 @@ char* printstringarray(char** s);
       Returns true if NULL or Empty
       else false
 **/
-bool badstring(char* s);
+bool badstring(String s);
 
                       /**Checks if a string is static
                          Returns true if static else false**/
-bool isstatic(char* s);
+bool isstatic(String s);
 
 
 
@@ -223,21 +229,40 @@ bool isstatic(char* s);
 
         /**
          * Gets the length of a string.
-         * Preconditions: String must exist
-         * Postconditions: String remains unchanged and length of string excluding null terminator is returned
+         * Preconditions: string must exist
+         * Postconditions: string remains unchanged and length of string excluding null terminator is returned
          * */
-int stringlen(char* s);
+int stringlen(String s);
+
+
+        /**
+         * Returns the indecies of all occurrencs of c in s.
+         * Returns a dynamic array of all indecies of c in s terminated with a value of -1. Or  if no occurences of c in s then returns 
+         * array with value of -1.
+         * Preconidtions: s must exist. c must be a valid character
+         * Postconditions: s and c remain unchanged. 
+         * */
+int* indecies_of_char(String s, char c);
+
+
+        /**
+         * returns a dynamic array of all indecies of occurrences of string s in string array terminated with a value of -1/
+         * Or if no occrences of s in a then returns an array with value of -1.
+         * Preconditions: a must exist and be non empty. s must exist and be nonempty
+         * Postconditions: a and s remain unchanged.
+         * 
+         * */
+int* indecies_of_string(Strings a, String s);
 
 
         /**
          * Gets the nth characters in string s
-         * Preconditions: String must exist and be non empty. n must be >= 1 and <= string length
+         * Preconditions: string must exist and be non empty. n must be >= 1 and <= string length
          * Postconidtions: The nth character in string s is returned. 
          * */
-char getch(char* s, int n);
+char getch(String s, int n);
 
 
-int stringtoint(char* s);
+int stringtoint(String s);
 
-int stringlen(char* s);
 #endif

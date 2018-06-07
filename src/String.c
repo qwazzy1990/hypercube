@@ -1,25 +1,25 @@
 #include <stdio.h>
-#include <string.h>
+#include <String.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <assert.h>
 
 #include "String.h"
-#include "utilities.h"
+
 
 
  
           /**
-            Function to copy the content of a file to a char*
+            Function to copy the content of a file to a String
             Input: File Pointer
-            Output: Char* with all content for file
+            Output: String with all content for file
           **/
-char* readfile(FILE* fp)
+String readfile(FILE* fp)
 {
     if(fp == NULL)return NULL;
     rewind(fp);
-    char* theFile = (char*)calloc(2, sizeof(char));
+    String theFile = (String)calloc(2, sizeof(char));
     if(theFile == NULL)return NULL;
     int mem_size = 2;
     int count = 0;
@@ -32,7 +32,7 @@ char* readfile(FILE* fp)
       theFile[count + 1] = '\0';
       count++;
       mem_size++;
-      theFile = (char*)realloc(theFile, sizeof(char)*mem_size);
+      theFile = (String)realloc(theFile, sizeof(char)*mem_size);
       if(theFile == NULL)return NULL;
     }
     theFile[count] = '\0';
@@ -43,11 +43,11 @@ char* readfile(FILE* fp)
 
 
             /**
-                Parses a string into an array of strings based on delimitr(s)
+                Parses a String into an array of Strings based on delimitr(s)
                 Input: String to be parsed and delimiters
-                Output: Array of strings delimited by delimiter
+                Output: Array of Strings delimited by delimiter
             **/
-char** stringsplit(char* s, char* delims)
+Strings stringsplit(String s, String delims)
 {
      int j = 0;
 
@@ -67,7 +67,7 @@ char** stringsplit(char* s, char* delims)
      int col = 0;
      char c = 0;
      char p = 0;
-     char** tokens = (char**)calloc(mem_size, sizeof(char*));
+     Strings tokens = (Strings)calloc(mem_size, sizeof(String));
      if(tokens == NULL)return NULL;
      tokens[row] = createvoidstring();
      //for
@@ -94,7 +94,7 @@ char** stringsplit(char* s, char* delims)
              row++;
              col = 0;
              mem_size++;
-             tokens = (char**)realloc(tokens, sizeof(char*)*mem_size);
+             tokens = (Strings)realloc(tokens, sizeof(String)*mem_size);
              if(tokens == NULL)return NULL;
              tokens[row] = createvoidstring();
              tokens[row][col] = c;
@@ -109,14 +109,14 @@ char** stringsplit(char* s, char* delims)
      }//endfor
    mem_size++;
    row++;
-   tokens = (char**)realloc(tokens, sizeof(char*)*mem_size);
+   tokens = (Strings)realloc(tokens, sizeof(String)*mem_size);
    if(tokens == NULL)return NULL;
    tokens[row] = NULL;
   return tokens;
 }//end Function
 
 
-bool isdelim(char c, char* delims)
+bool isdelim(char c, String delims)
 {
     if(delims == NULL)return false;
     if(strlen(delims) <= 0)return false;
@@ -140,9 +140,9 @@ bool isdelim(char c, char* delims)
 /**
     Output: null-terminated String of DEFAULT_SIZE
 **/
-char* createvoidstring(void)
+String createvoidstring(void)
 {
-     char* s = (char*)calloc(50000, sizeof(char));
+     String s = (String)calloc(50000, sizeof(char));
      if(s == NULL)return NULL;
      for(int i = 0; i < DEFAULT_SIZE; i++)
       s[i] = '\0';
@@ -150,15 +150,15 @@ char* createvoidstring(void)
 }
 
 /**
-    Input: string
-    Output: new null-terminated string of size = len of s
+    Input: String
+    Output: new null-terminated String of size = len of s
     or NULL if input is invalid
 **/
-char* createstring(char* s)
+String createstring(String s)
 {
     if(badstring(s))return NULL;
     int len = strlen(s);
-    char* newString = (char*)calloc(len, sizeof(char));
+    String newString = (String)calloc(len, sizeof(char));
     if(newString == NULL)return NULL;
     for(int i = 0; i < len; i++)
       s[i] = '\0';
@@ -167,13 +167,13 @@ char* createstring(char* s)
 
 
 /**
-   Input: size of string to be created
-   Output: Null-terminated string = to size
+   Input: size of String to be created
+   Output: Null-terminated String = to size
 **/
-char* createnstring(unsigned int size)
+String createnstring(unsigned int size)
 {
     assert(size > 0);
-    char* s = (char*)calloc(size, sizeof(char));
+    String s = (String)calloc(size, sizeof(char));
     if(s == NULL)return NULL;
     for(int i = 0; i < size; i++)
         s[i] = '\0';
@@ -185,19 +185,19 @@ char* createnstring(unsigned int size)
 
 
 /**
-    Constructors for string arrays
+    Constructors for String arrays
 **/
 
 
 /**
      Preconditions: N/A
-     Postconditions: Newly allocated string matrix of DEFAULT_SIZE by DEFAULT_SIZE
+     Postconditions: Newly allocated String matrix of DEFAULT_SIZE by DEFAULT_SIZE
      String array terminated with NULL
 **/
-char** createvoidstringarray(void)
+Strings createvoidstringarray(void)
 {
     int i = 0;
-    char** s = (char**)calloc(DEFAULT_SIZE+1, sizeof(char*));
+    Strings s = (Strings)calloc(DEFAULT_SIZE+1, sizeof(String));
     if(s==NULL)return NULL;
     for(i = 0; i < DEFAULT_SIZE; i++){
       s[i] = createvoidstring();
@@ -211,12 +211,12 @@ char** createvoidstringarray(void)
 
                   /********DESTROYERS*************/
 
-void destroystring_real(char** s)
+void destroystring_real(Strings s)
 {
     assert(s != NULL);
     if((*s) == NULL)return;
-   
-    if(stringlen(*s)<=0)return;
+    String temp = (String)(*s);
+    if(stringlen(temp)<=0)return;
     free(*s);
     *s = NULL;
 }
@@ -225,11 +225,11 @@ void destroystring_real(char** s)
 /**
    Input: String
    Output: N/A
-   Function to free a string array
+   Function to free a String array
 
 **/
 
-void destroystringarray_real(char*** s)
+void destroystringarray_real(Strings* s)
 {
     if(s == NULL){
       return;
@@ -238,13 +238,35 @@ void destroystringarray_real(char*** s)
       return;
     }
     int i = 0;
-    while((*s)[i] != NULL){
-        destroystring((*s)[i]);
-	i++;
+    Strings temp = (Strings)(*s);
+    while(temp[i] != NULL){
+        destroystring(temp[i]);
+	    i++;
     }
     free(*s);
     *s = NULL;
 }
+
+int remove_from_stringarray(Strings a, String s){
+    int i = 0;
+    while(a[i] != NULL){
+        if(strncmp(a[i], s, strlen(s)+1)==0){
+            destroystring(a[i]);
+            break;
+        }
+        i++;
+    }
+    int count = i+1;
+    int prev = i;
+    while(a[count]!=NULL){
+        a[prev] = stringcopy(a[count]);
+        destroystring(a[count]);
+        count++;
+        prev++;
+    }
+    return i;
+}
+
 
 
 
@@ -253,11 +275,11 @@ void destroystringarray_real(char*** s)
                             /***********CLONERS**********/
 
 
-char* stringcopy(char* source)
+String stringcopy(String source)
 {
    if(badstring(source))return NULL;
    int len = stringlen(source) + 1;
-   char* clone = createnstring(len);
+   String clone = createnstring(len);
    int i = 0;
    for(i = 0; i < len-1; i++)
       clone[i] = source[i];
@@ -266,11 +288,11 @@ char* stringcopy(char* source)
     return clone;
 }
 
-char* stringncopy(char* source, int n)
+String stringncopy(String source, int n)
 {
     if(badstring(source))return NULL;
     if(strlen(source) < n)return NULL;
-    char* clone = createnstring(n+1);
+    String clone = createnstring(n+1);
     int i = 0;
     for(i = 0; i < n; i++)
       clone[i] = source[i];
@@ -279,18 +301,18 @@ char* stringncopy(char* source, int n)
 }
 
 
-char** stringarraycopy(char** source)
+Strings stringarraycopy(Strings source)
 {
     if(source == NULL)return NULL;
     if(badstring(source[0]))return NULL;
     int count = 0;
     int mem_size = 1;
-    char** clone = (char**)calloc(mem_size, sizeof(char*));
+    Strings clone = (Strings)calloc(mem_size, sizeof(String));
     if(clone == NULL)return NULL;
     while(source[count] != NULL){
       clone[count] = stringcopy(source[count]);
       mem_size++;
-      clone = (char**)realloc(clone, sizeof(char*)*mem_size);
+      clone = (Strings)realloc(clone, sizeof(String)*mem_size);
       if(clone == NULL)return NULL;
       count++;
     }
@@ -303,7 +325,7 @@ char** stringarraycopy(char** source)
 
 
 
-char* stringsegmentcopy(char* s, unsigned int start, unsigned int end)
+String stringsegmentcopy(String s, unsigned int start, unsigned int end)
 {
     if(badstring(s))return NULL;
     if(start <= 0){
@@ -314,7 +336,7 @@ char* stringsegmentcopy(char* s, unsigned int start, unsigned int end)
     }
     if(start > end)return NULL;
     int mem_size = (end - start)+2;
-    char* clone = createnstring(mem_size+1);
+    String clone = createnstring(mem_size+1);
     if(clone == NULL)return NULL;
     int count = start-1;
     int i = 0;
@@ -328,10 +350,10 @@ char* stringsegmentcopy(char* s, unsigned int start, unsigned int end)
 
 
 
-char** stringarraysegmentcopy(char** s, unsigned int start, unsigned int end)
+Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end)
 {
       //error checking
-      char** clone = stringarraycopy(s);
+      Strings clone = stringarraycopy(s);
       if(clone == NULL)return NULL;
 
      if(s == NULL)return NULL;
@@ -351,14 +373,14 @@ char** stringarraysegmentcopy(char** s, unsigned int start, unsigned int end)
      if(start > end)return NULL;
 
      int mem_size = 1;
-     char** copy = (char**)calloc(mem_size, sizeof(char*));
+     Strings copy = (Strings)calloc(mem_size, sizeof(String));
      int count = start-1;
      int j = 0;
      for(j = 0; j <= end-start; j++){
         copy[j] = stringcopy(clone[count]);
         count++;
         mem_size++;
-        copy = (char**)realloc(copy, mem_size*sizeof(char*));
+        copy = (Strings)realloc(copy, mem_size*sizeof(String));
      }
      copy[j] = NULL;
 
@@ -372,7 +394,7 @@ char** stringarraysegmentcopy(char** s, unsigned int start, unsigned int end)
 
                       /********MUTATORS*********************/
 
-char* stringcat(char* dest, char* source)
+String stringcat(String dest, String source)
 {
     assert(badstring(source)==false);
     if(badstring(dest)){
@@ -380,7 +402,7 @@ char* stringcat(char* dest, char* source)
 	       assert(badstring(dest)==false);
 	       return dest;
     }
-    char* clone = (char*)calloc(stringlen(dest), sizeof(*clone));
+    String clone = (String)calloc(stringlen(dest), sizeof(*clone));
     int j = 0;
     while(dest[j] != '\0'){
         if(dest[j]=='\0')break;
@@ -391,7 +413,7 @@ char* stringcat(char* dest, char* source)
     int count = 0;
     int reallocSize= j + stringlen(source) +2;
     count = j;
-    clone = (char*)realloc(clone, reallocSize*sizeof(char));
+    clone = (String)realloc(clone, reallocSize*sizeof(char));
    
     for(int i = 0; i < strlen(source); i++){
         clone[count] = source[i];
@@ -403,14 +425,14 @@ char* stringcat(char* dest, char* source)
 
 
 
-char* reversestring(char* s)
+String reversestring(String s)
 {
     assert(badstring(s)==false);
      if(badstring(s))return NULL;
      int len = stringlen(s);
      int n = len-1;
      int i = 0;
-     char* inverse = createnstring(len+1);
+     String inverse = createnstring(len+1);
      for( i = 0; i <= len-1; i++){
        inverse[i] = s[n];
        n--;
@@ -420,14 +442,24 @@ char* reversestring(char* s)
      return inverse;
 }
 
-char* tostring(Primitive type, void* data)
+int add_to_stringarray(Strings a, String s)
+{
+    int i = 0;
+    while(a[i] != NULL){
+        i++;
+    }
+    a[i] = stringcopy(s);
+    return i;
+}
+
+String tostring(Primitive type, void* data)
 {
     assert((type == INT) || (type == FLOAT));
     assert(data != NULL);
     if(type != INT && type != FLOAT)return NULL;
     if(data == NULL)return NULL;
-    char* s = createvoidstring();
-    char* s2 = NULL;
+    String s = createvoidstring();
+    String s2 = NULL;
     //if
     if(type == INT){
         int* d = (int*)data;
@@ -562,7 +594,7 @@ char* tostring(Primitive type, void* data)
 }
 
 
-int stringtoint(char* s)
+int stringtoint(String s)
 {
     assert(badstring(s) == false);
     int value = 0;
@@ -575,6 +607,11 @@ int stringtoint(char* s)
 }
 
 
+void replace_in_string(String s, char c, int index)
+{
+   
+    s[index] = c;
+}
 
 
 
@@ -583,7 +620,7 @@ int stringtoint(char* s)
                       /*************PRINTERS************/
 
 
-char* printstringarray(char** s)
+String printstringarray(Strings s)
 {
     if(s == NULL)return NULL;
     int i = 0;
@@ -593,7 +630,7 @@ char* printstringarray(char** s)
     if(i == 0){
        return NULL;
     }
-    char* printer = NULL;
+    String printer = NULL;
     i = 0;
     while(s[i] != NULL){
       printer = stringcat(printer, s[i]);
@@ -612,10 +649,10 @@ char* printstringarray(char** s)
                             /********VALIDATORS***********/
 /**
       Input: String
-      Output: True if string is  NUll or Empty
+      Output: True if String is  NUll or Empty
               else true
 **/
-bool badstring(char*s)
+bool badstring(String s)
 {
      if(s==NULL)return true;
      if(strlen(s) <= 0)return true;
@@ -624,7 +661,7 @@ bool badstring(char*s)
 
 
                           /*****************Accessors*****************/
-int stringlen(char* s)
+int stringlen(String s)
 {
     if(s == NULL)return -1;
 
@@ -635,7 +672,7 @@ int stringlen(char* s)
     return i;
 }
 
-char getch(char* s, int n)
+char getch(String s, int n)
 {
     if(badstring(s))return -1;
     if(n < 1 || n > stringlen(s))return -1;
@@ -645,4 +682,48 @@ char getch(char* s, int n)
 
 
 
+int* indecies_of_char(String s, char c)
+{
+    assert(badstring(s)==false);
+    int* indecies = NULL;
+    int mem_size = sizeof(int);
+    int i = 0;
+    int count = 0;
+    while(s[i] != '\0'){
+        if(s[i] == c){
+            count++;
+            indecies = (int*)realloc(indecies, mem_size*count);
+            indecies[count-1] = i;
+        }
+        i++;
+    }
+    count++;
+    indecies = realloc(indecies, mem_size*count);
+    indecies[count-1] = -1;
+    return indecies;
+}
 
+
+int* indecies_of_string(Strings a, String s)
+{
+
+    assert(badstring(s)==false);
+    assert(a != NULL);
+    int* indecies = NULL;
+    int mem_size = sizeof(int);
+    int i = 0;
+    int count = 0;
+    while(a[i] != NULL){
+        if(strncmp(a[i], s, strlen(s)+1)==0){
+            count++;
+            indecies = (int*)realloc(indecies, mem_size*count);
+            indecies[count-1] = i;
+        }
+        i++;
+    }
+    count++;
+    indecies = realloc(indecies, mem_size*count);
+    indecies[count-1] = -1;
+    return indecies;
+
+}

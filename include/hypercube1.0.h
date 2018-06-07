@@ -18,7 +18,7 @@ enum vs{DEAD_END, SEED};
 typedef enum vs VertexStatus;
 
 struct hc{
-    char* string;
+    String string;
     struct hc** neighbors;
     bool visited;
 	bool seed;
@@ -50,7 +50,7 @@ CubeVertex generate_seed(int n, int k);
 		 * */
 CubeVertecies generate_vertecies(int n, int k);
 
-CubeVertex new_vertex(char* s);
+CubeVertex new_vertex(String s);
 
 
 
@@ -61,21 +61,28 @@ CubeVertex new_vertex(char* s);
 							/**
 							 * Fucntion to set the neighbors of a CubeVertex
 							 * */
-char** generate_neighbors(char* v);
+Strings generate_neighbors(String v);
 
+
+							/*********ACCESSORS*********/
+unsigned long n_choose_k(int n, int k);
 
 
 
 
 							
 							/*****PRINTERS*********/
-char* print_vertex(AnyData v);
+String print_vertex(AnyData v);
+
+void print_path(void);
 
 
 
 						/***********DESTROYERS*************/
 
 void destroy_vertex_real(AnyData* d);
+
+void destroy_vertex_update(AnyData d);
 
 
 						/**************CLONERS***********/
@@ -84,7 +91,30 @@ CubeVertex clone_vertext(CubeVertex v);
 
 
 						/**********BACK TRACKING ALGORITHM************/
-void back_track(HashMap map, char* key, int currentLevel, int maxDepth);
+void back_track(HashMap map, String binaryString, int n, char bit, int maxDepth);
+
+void set_bit(Strings s, int n);
+
+
+
+						/****************MODULE****************/
+
+void generate_hamiltonian_paths(int n, int k);
+
+
+						/************MODIFIERS DYK_WORD*************/
+
+String zero_dyk_word(String s);
+
+String one_dyk_word(String s);
+
+Strings cyclic_decomposition(String s);
+
+
+
+					/******************TEST FUNCTION FOR N = 7**************/
+
+Strings test_7( void );
 
 #endif
 

@@ -2,8 +2,8 @@
 #define _HASH_MAP_
 
 #include <stdbool.h>
-#include "utilities.h"
-#include "String.h"
+#include "..//..//..//utilities/include/utilities.h"
+#include "..//..//..//String/include/String.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -51,8 +51,8 @@ struct hm{
    Nodes table;
    int tableSize;
    int size;
-   print_func printData;
-   delete_func deleteData;
+   PrintFunc printData;
+   DeleteFunc deleteData;
 
 };typedef struct hm Map;
 
@@ -64,8 +64,6 @@ typedef Map* HashMap;
 
 
 
-							/****************HASH FUNCTION************/
-unsigned long hash(HashMap map, char* key);
 
 		/**
 		 * Function to create a Node for the HashMap
@@ -79,7 +77,7 @@ Node new_node(char* k, AnyData d);
 	 *The HashMap is empty with exception to its size, 
 	 print function and delete function
 	 * **/
-HashMap new_hashmap(print_func p, delete_func d, unsigned int table_size);
+HashMap new_hashmap(PrintFunc p, DeleteFunc d, unsigned int table_size);
 
 
 	/**
@@ -107,7 +105,7 @@ unsigned long current_size_hashmap(HashMap map);
 
 unsigned long table_size_hashmap(HashMap map);
 
-
+unsigned long hash(HashMap map, char* key);
 
 
 	/**
