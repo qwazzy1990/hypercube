@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <String.h>
+#include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <assert.h>
 
-#include "String.h"
+#include "DynamicString.h"
 
 
 
@@ -13,7 +13,7 @@
           /**
             Function to copy the content of a file to a String
             Input: File Pointer
-            Output: String with all content for file
+            Output: Char* with all content for file
           **/
 String readfile(FILE* fp)
 {
@@ -43,9 +43,9 @@ String readfile(FILE* fp)
 
 
             /**
-                Parses a String into an array of Strings based on delimitr(s)
+                Parses a string into an array of strings based on delimitr(s)
                 Input: String to be parsed and delimiters
-                Output: Array of Strings delimited by delimiter
+                Output: Array of strings delimited by delimiter
             **/
 Strings stringsplit(String s, String delims)
 {
@@ -130,9 +130,37 @@ bool isdelim(char c, String delims)
 
 
 
+                    /*****MEMORY ALLOCATING FUNCTIONS*****/
+String string_alloc(int size)
+{
+    assert(size > 0);
+    String newString = (String)calloc((size+5), sizeof(char));
+    return newString; 
+}
 
+void resize_string_real(String* s, int* size)
+{
+    assert(s != NULL);
+    assert(*s != NULL);
+    assert(*size > 0);
+    *size += stringlen(*s)+1;
+    *s = (String)realloc(*s, *size);
+}
 
+Strings strings_alloc(int size)
+{
+    assert(size > 0);
+    Strings s = (Strings)calloc((size+5), sizeof(char*));
+    return s;
+}
 
+Strings resize_strings(Strings s, int size)
+{
+    assert(s != NULL);
+    assert(size > 0);
+    s = (Strings)realloc(s, sizeof(char*)*(size+5));
+    return s;
+}
 
 
                       /********CONSTRUCTORS*************/
@@ -150,8 +178,8 @@ String createvoidstring(void)
 }
 
 /**
-    Input: String
-    Output: new null-terminated String of size = len of s
+    Input: string
+    Output: new null-terminated string of size = len of s
     or NULL if input is invalid
 **/
 String createstring(String s)
@@ -167,16 +195,16 @@ String createstring(String s)
 
 
 /**
-   Input: size of String to be created
-   Output: Null-terminated String = to size
+   Input: size of string to be created
+   Output: Null-terminated string = to size
 **/
 String createnstring(unsigned int size)
 {
     assert(size > 0);
-    String s = (String)calloc(size, sizeof(char));
+    new_object(String, s, size);
     if(s == NULL)return NULL;
-    for(int i = 0; i < size; i++)
-        s[i] = '\0';
+    for_all(size)
+        s[x] = '\0';
     return s;
 }
 
@@ -185,22 +213,23 @@ String createnstring(unsigned int size)
 
 
 /**
-    Constructors for String arrays
+    Constructors for string arrays
 **/
 
 
 /**
      Preconditions: N/A
-     Postconditions: Newly allocated String matrix of DEFAULT_SIZE by DEFAULT_SIZE
+     Postconditions: Newly allocated string matrix of DEFAULT_SIZE by DEFAULT_SIZE
      String array terminated with NULL
 **/
 Strings createvoidstringarray(void)
 {
     int i = 0;
-    Strings s = (Strings)calloc(DEFAULT_SIZE+1, sizeof(String));
+    new_object(Strings, s, 1000+1);
     if(s==NULL)return NULL;
-    for(i = 0; i < DEFAULT_SIZE; i++){
-      s[i] = createvoidstring();
+    for(i = 0; i < 1000; i++){
+       new_object(String, t, 1000);
+       s[i] = t;
     }
     s[i]=NULL;
     return s;
@@ -214,7 +243,9 @@ Strings createvoidstringarray(void)
 void destroystring_real(Strings s)
 {
     assert(s != NULL);
-    if((*s) == NULL)return;
+    if((*s) == NULL){
+        return;
+    }
     String temp = (String)(*s);
     if(stringlen(temp)<=0)return;
     free(*s);
@@ -225,7 +256,7 @@ void destroystring_real(Strings s)
 /**
    Input: String
    Output: N/A
-   Function to free a String array
+   Function to free a string array
 
 **/
 
@@ -241,7 +272,7 @@ void destroystringarray_real(Strings* s)
     Strings temp = (Strings)(*s);
     while(temp[i] != NULL){
         destroystring(temp[i]);
-	    i++;
+	i++;
     }
     free(*s);
     *s = NULL;
@@ -394,33 +425,58 @@ Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end)
 
                       /********MUTATORS*********************/
 
-String stringcat(String dest, String source)
+
+
+/**********FIX ME:********/
+String stringcat(String s, int n, ...)
 {
-    assert(badstring(source)==false);
-    if(badstring(dest)){
-	      dest = stringcopy(source);
-	       assert(badstring(dest)==false);
-	       return dest;
+    va_list list;
+    va_start(list, n);
+    String c = NULL;
+    String temp = NULL;
+    int memSize = 0;
+    int end = 0;
+    if(s == NULL){
+        for_all(n){
+            temp = va_arg(list, char*);
+            memSize += stringlen(temp)+1;
+            if(x == 0){
+                c = stringcopy(temp);
+            }else{
+                resize_string(c, memSize);
+                PR("Debug %s\n", c);
+                end = stringlen(c);
+                for_each(x, stringlen(temp)+1){
+                    c[end] = temp[x];
+                    end++;
+                }
+                c[end] = '\0';
+                PR("c is %s\n", c);
+            }
+        }
+        va_end(list);
+        if(c == NULL)PR("What the fuck\n");
+        return c;
     }
-    String clone = (String)calloc(stringlen(dest), sizeof(*clone));
-    int j = 0;
-    while(dest[j] != '\0'){
-        if(dest[j]=='\0')break;
-      clone[j] = dest[j];
-      j++;
+    else{
+        c = stringcopy(s);
+        memSize = stringlen(c)+1;
+        end = stringlen(c);
+        for_all(n){
+            temp = va_arg(list, char*);
+            memSize = stringlen(temp)+1;
+            resize_string(c, memSize);
+            end = stringlen(c);
+            for_each(0, stringlen(temp)+1){
+                c[end] = temp[x];
+                end++;
+            }
+            c[end] = '\0';
+        }
+        va_end(list);
+        destroystring(s);
+        return c;
     }
-    destroystring(dest);
-    int count = 0;
-    int reallocSize= j + stringlen(source) +2;
-    count = j;
-    clone = (String)realloc(clone, reallocSize*sizeof(char));
-   
-    for(int i = 0; i < strlen(source); i++){
-        clone[count] = source[i];
-        count++;
-    }
-   clone[count] = '\0';
-    return clone;
 }
 
 
@@ -438,8 +494,43 @@ String reversestring(String s)
        n--;
      }
      inverse[i] = '\0';
-     destroystring(s);
      return inverse;
+}
+
+String to_lower(String s)
+{
+    assert(s != NULL);
+    String temp = stringcopy(s);
+    for_each(x, stringlen(temp)){
+        if(temp[x] >= 65 && temp[x] <= 90){
+            char c = temp[x];
+            int t = (int)c;
+            t = t+32;
+            c = (char)t;
+            temp[x] = c;
+        }
+    }
+    String lowerCase = stringcopy(temp);
+    destroystring(temp);
+    return lowerCase;
+}
+
+String to_upper(String s)
+{
+    assert(s != NULL);
+    String temp = stringcopy(s);
+    for_each(x, stringlen(temp)){
+        if(temp[x] >= 97 && temp[x] <= 122){
+            char c = temp[x];
+            int t = (int)c;
+            t = t-32;
+            c = (char)t;
+            temp[x] = c;
+        }
+    }
+    String upperCase = stringcopy(temp);
+    destroystring(temp);
+    return upperCase;
 }
 
 int add_to_stringarray(Strings a, String s)
@@ -449,6 +540,7 @@ int add_to_stringarray(Strings a, String s)
         i++;
     }
     a[i] = stringcopy(s);
+    a[i+1] = NULL;
     return i;
 }
 
@@ -496,7 +588,7 @@ String tostring(Primitive type, void* data)
             s[i] = c;
             i++;
           }//endwhile
-          s = stringcat(s, "-");
+          s = stringcat(s, 1, "-");
           s2 = reversestring(s);
           n = *d;
 
@@ -583,7 +675,7 @@ String tostring(Primitive type, void* data)
             }//endelse
             count--;
         }//endwhile
-        s = stringcat(s, "-");
+        s = stringcat(s, 1, "-");
         s2 = reversestring(s);
 
       }//endif
@@ -607,12 +699,11 @@ int stringtoint(String s)
 }
 
 
+
 void replace_in_string(String s, char c, int index)
 {
-   
     s[index] = c;
 }
-
 
 
 
@@ -633,9 +724,9 @@ String printstringarray(Strings s)
     String printer = NULL;
     i = 0;
     while(s[i] != NULL){
-      printer = stringcat(printer, s[i]);
+      printer = stringcat(printer, 1, s[i]);
 
-      printer = stringcat(printer, "\n");
+      printer = stringcat(printer, 1, "\n");
       i++;
     }
     return printer;
@@ -649,7 +740,7 @@ String printstringarray(Strings s)
                             /********VALIDATORS***********/
 /**
       Input: String
-      Output: True if String is  NUll or Empty
+      Output: True if string is  NUll or Empty
               else true
 **/
 bool badstring(String s)
@@ -657,6 +748,101 @@ bool badstring(String s)
      if(s==NULL)return true;
      if(strlen(s) <= 0)return true;
      return false;
+}
+
+bool is_upper_real(char c)
+{
+    int x = (int)c;
+    if(x >= 65 && x <=90){
+        return true;
+    }return false;
+}
+
+EqualStringStatus strequal(String s1, String s2, CaseSensitivity c)
+{
+    assert(s1 != NULL);
+    assert(s2 != NULL);
+    if(c == CASE_SENSITIVE){
+        EqualStringStatus equivelenceStatus = NULL;
+        mem_alloc(equivelenceStatus, 1);
+        equivelenceStatus->lengthDifferential = stringlen(s1) - stringlen(s2);
+        if(equivelenceStatus->lengthDifferential > 0){
+            equivelenceStatus->message = stringcopy("First string is longer than second string");
+            equivelenceStatus->equal = false;
+            return equivelenceStatus;
+        }//endif
+
+        if(equivelenceStatus->lengthDifferential < 0){
+            equivelenceStatus->message = stringcopy("Second string is longer than first string");
+            equivelenceStatus->equal = false;
+            return equivelenceStatus;
+        }//endif
+
+        equivelenceStatus->lengthDifferential = 0; 
+
+        for_each(x, stringlen(s1)){
+            if(s1[x] != s2[x]){
+                equivelenceStatus->message = stringcopy("Strings differ: Check index to see at which index they differ");
+                equivelenceStatus->equal = false;
+                equivelenceStatus->index = x;
+                return equivelenceStatus;
+            }
+        }//endfor
+        equivelenceStatus->message = stringcopy("Strings are equal");
+        equivelenceStatus->equal = true;
+        equivelenceStatus->index = -1;
+        return equivelenceStatus;
+    }//endif
+
+    else{
+        EqualStringStatus equivelenceStatus = NULL;
+        mem_alloc(equivelenceStatus, 1);
+        equivelenceStatus->lengthDifferential = stringlen(s1) - stringlen(s2);
+        if(equivelenceStatus->lengthDifferential > 0){
+            equivelenceStatus->index = -2;
+            equivelenceStatus->message = stringcopy("First string is longer than second string");
+            equivelenceStatus->equal = false;
+            return equivelenceStatus;
+        }//endif
+        if(equivelenceStatus->lengthDifferential < 0){
+            equivelenceStatus->index = -2;
+            equivelenceStatus->message = stringcopy("Second string is longer than first string");
+            equivelenceStatus->equal = false;
+            return equivelenceStatus;
+        }//endif
+        equivelenceStatus->lengthDifferential = 0; 
+        char* temp1 = stringcopy(s1);
+        char* temp2 = stringcopy(s2);
+        for_each(x, stringlen(temp1)){
+            char c = temp1[x];
+            char c2 = temp2[x];
+            if(IS_UPPER(c)){
+                c = c+32;
+            }
+            if(IS_UPPER(c2)){
+                c2 = c2+32;
+            }
+            replace_in_string(temp1, c, x);
+            replace_in_string(temp2, c2, x);
+        }//endfor
+        for_each(x, stringlen(temp1)){
+            if(temp1[x] != temp2[x]){
+                equivelenceStatus->message = stringcopy("Strings differ: Check index to see at which index they differ");
+                equivelenceStatus->equal = false;
+                equivelenceStatus->index = x;
+                PR("%s %s\n", temp1, temp2);
+                destroystring(temp1);
+                destroystring(temp2);
+                return equivelenceStatus;
+            }
+        }//endfor
+        equivelenceStatus->message = stringcopy("Strings are equal");
+        equivelenceStatus->equal = true;
+        equivelenceStatus->index = -1;
+        destroystring(temp1);
+        destroystring(temp2);
+        return equivelenceStatus;
+    }//endelse
 }
 
 
@@ -727,3 +913,6 @@ int* indecies_of_string(Strings a, String s)
     return indecies;
 
 }
+
+
+/****FIX ME: CREATE A FUNCTION TO GET THE STATUS OF A STRING****/

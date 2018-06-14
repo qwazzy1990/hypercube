@@ -1,15 +1,15 @@
-#ifndef _string_
-#define _string_
+#ifndef _STRING_
+#define _STRING_
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include "utilities.h"
 
 #define DEFAULT_SIZE 10000
-
 
 
 
@@ -22,13 +22,66 @@
 
 #define destroystringarray(myarg) destroystringarray_real(&myarg)
 
+#define resize_string(myarg, x) resize_string_real(&myarg, &x)
 
 
+        /**PRE-PROCESSOR DIRECTIVES FOR ASCII VERIFICATION*****/
+#define IS_UPPER(x) ((x>=65)&&(x<=90))
+#define IS_LOWER(x) ((x>=97)&&(x<=122))
+#define IS_DIGIT(x) ((x>=48)&&(x<=57))
+#define IS_VISIBLE(x) ((var >= 33) && (var <= 126))
 
+        /**PRE-PRCOCESSOR DIRECTIVIES FOR CONVERTING ARGUMENT TOKEN TO STRINGS***/
+
+#define $(myarg) #myarg 
+
+#define $$(myarg) $(myarg) 
+
+    /***CREATING TYPE STRING***/
 typedef char* String;
 typedef String* Strings;
-      
 
+    /***DEFINING FUNCTION POINTERS FOR STRING STATUS FUNCTIONS FIX ME:***/
+
+/*typedef bool (*AllUpperFunc)(void* s);
+typedef bool (*AllLowerFunc)(void* s);
+typedef bool (*IsDigitFunc)(void * s);
+typedef bool (*)*/
+
+/***CASE SENSITIVITY ENUM****Set case sensitivity for comparison***/
+
+enum cc{CASE_SENSITIVE, CASE_INSENSITIVE};
+typedef enum cc CaseSensitivity;
+
+
+
+struct ss{
+    String string;
+    unsigned int length;
+    bool allUpperCase;
+    bool allLowerCase;
+    bool isSentence;
+    bool isWord;
+    bool isNumber;
+    bool isStatement;
+    bool isQuestion;
+    bool isExclamation;
+};
+
+typedef  struct ss SS;
+typedef SS* StringStatus; 
+
+struct ess{
+    int index;
+    int lengthDifferential;
+    bool equal;
+    String message;
+};
+
+typedef struct ess ESS;
+typedef ESS* EqualStringStatus;
+
+   
           /**
               Converts a file to a string
           **/
@@ -37,6 +90,17 @@ String readfile(FILE* fp);
 
 
 
+
+                        /******MEORY ALLOCATING FUNCTIONS******/
+
+
+String string_alloc(int size);
+
+void resize_string_real(String* s, int* size);
+
+Strings strings_alloc(int size);
+
+Strings resize_strings(Strings s, int size);
 
                         /**PARSING FUNCTIONS********/
 
@@ -168,6 +232,8 @@ Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end);
 
                       /***************MUTATORS****************/
 
+                /****NOTE: ALL MUTATORS PERMANENTLY MODIFY STRING OR STRINGS ARGUMENTS PASSED TO THEM****/
+
 /**
   Function to concatenate one string to the end of another
   Preconditions: Neither Source nor Dest can be NULL
@@ -175,8 +241,7 @@ Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end);
 
    Postconditions: Source is unchanged. Destination is modified with source appended
 **/
-String stringcat(String dest, String source);
-
+String stringcat(String s, int n, ...);
 
 /**
     Function to convert data in memory to a string
@@ -196,6 +261,10 @@ String reversestring(String s);
 int add_to_stringarray(Strings a, String s);
 
 void replace_in_string(String s, char c, int index);
+
+String to_lower(String s);
+
+String to_upper(String s);
 
                         /*************PRINT FUNCTIONS**************/
 
@@ -220,6 +289,15 @@ bool badstring(String s);
                          Returns true if static else false**/
 bool isstatic(String s);
 
+bool is_upper_real(char c);
+EqualStringStatus strequal(String s1, String s2, CaseSensitivity c);
+
+
+                    /**
+                     * Checks of two String are equal. Returns an object of type EqualStringStatus.
+                     * If strings are equal EqualStringStatus returns true and -1
+                     * Else returns false and the index at which the strings differ
+                     * */
 
 
 
@@ -264,5 +342,12 @@ char getch(String s, int n);
 
 
 int stringtoint(String s);
+
+
+
+/***FIX ME: WRITE A FUNCTION TO GET THE STATUS OF A STRING****/
+
+StringStatus get_string_status(String s);
+
 
 #endif

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "String.h"
+#include "DynamicString.h"
 #include "utilities.h"
 #include "HashMap.h"
 #include "hypercube1.0.h"
@@ -16,6 +16,7 @@ bool debug4 = false;
 bool debug5 = false;
 bool debug6 = false;
 bool debug7 = true;
+bool debug9 = false;
 
 
 
@@ -101,22 +102,24 @@ int main(int argc, String argv[])
   if(debug5){
     
     //generate_hamiltonian_paths(5, 2);
-    String temp = stringcopy("00011");
-    String temp2 = stringcopy("00101");
+    String temp = stringcopy("0100111");
+    //String temp2 = stringcopy("00101");
     //temp = one_dyk_word(temp);
     //printf("%s\n", temp);
     //destroystring(temp);
     Strings cycle = cyclic_decomposition(temp);
-    Strings cycle2 = cyclic_decomposition(temp2);
+    //Strings cycle2 = cyclic_decomposition(temp2);
     String printer = printstringarray(cycle);
-    String printer2 = printstringarray(cycle2);
-    printer = stringcat(printer, printer2);
-    destroystring(printer2);
+    printer = stringcat(printer, 1, "Cyclic Decomposition using Dyk Word\n");
+    //printer = reversestring(printer);
+    //String printer2 = printstringarray(cycle2);
+    //printer = stringcat(printer, printer2);
+    //destroystring(printer2);
     printf("%s\n", printer);
 
     destroystring(temp);
-    destroystring(temp2);
-    destroystringarray(cycle2);
+    //destroystring(temp2);
+    //destroystringarray(cycle2);
     destroystringarray(cycle);
     destroystring(printer);
     
@@ -126,7 +129,19 @@ int main(int argc, String argv[])
     generate_hamiltonian_paths(7, 3);
   }
   if(debug7){
-    test_7();
+    Strings k = test_7();
+    destroystringarray(k);
+  }
+  if(debug9){
+     test_9();
+     /*new_object(Strings, s, 10);
+     for_all(10){
+       s[x] = stringcopy($(x));
+     }
+     iterate_array(10){
+       if(strcmp(s[x], s[y])==0)printf("%s %s\n", s[x], s[y]);
+     }
+     destroystringarray(s);*/
   }
   return 0;
 }

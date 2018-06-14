@@ -2,8 +2,8 @@
 #define _HASH_MAP_
 
 #include <stdbool.h>
-#include "..//..//..//utilities/include/utilities.h"
-#include "..//..//..//String/include/String.h"
+#include "utilities.h"
+#include "DynamicString.h"
 #include <stdio.h>
 #include <stdlib.h>
 

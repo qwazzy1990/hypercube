@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "String.h"
+#include "DynamicString.h"
 #include "utilities.h"
 #include "HashMap.h"
 
@@ -115,6 +115,8 @@ Strings cyclic_decomposition(String s);
 					/******************TEST FUNCTION FOR N = 7**************/
 
 Strings test_7( void );
+
+Strings test_9( void );
 
 #endif
 

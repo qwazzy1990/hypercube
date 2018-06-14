@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "HashMap.h"
+#include "DynamicString.h"
+#include "utilities.h"
 
 
 
@@ -147,27 +149,27 @@ static int dyk_word_0(char* s)
             }
         }
     }else{
-        int p = 0;
+        int t = 0;
         int q = 1;
         bool found = false;
         while(!found){
-            if(p == stringlen(s)){
-                p = 0;
+            if(t == stringlen(s)){
+                t = 0;
             }
-            if(s[p] == '0'){
-                bool v = next_index_dykword(s, p, '0');
+            if(s[t] == '0'){
+                bool v = next_index_dykword(s, t, '0');
                 if(DEBUG1)printf("V is %d\n", v);
                 if(v==true){
-                    q = next_bit_dykword(s, p, '1');
+                    q = next_bit_dykword(s, t, '1');
                     if(DEBUG1)printf("s at q is %c\n", s[q]);
                     if(DEBUG1)printf("q is %d\n", q);
-                    replace_in_string(s, '(', p);
+                    replace_in_string(s, '(', t);
                     replace_in_string(s, ')', q);
                     return dyk_word_0(s);
                     break; 
                 }
             }
-            p++;
+            t++;
 
         }
 
@@ -197,27 +199,27 @@ static int dyk_word_1(char* s)
             }
         }
     }else{
-        int p = 0;
+        int t = 0;
         int q = 1;
         bool found = false;
         while(!found){
-            if(p == stringlen(s)){
-                p = 0;
+            if(t == stringlen(s)){
+                t = 0;
             }
-            if(s[p] == '1'){
-                bool v = next_index_dykword(s, p, '1');
+            if(s[t] == '1'){
+                bool v = next_index_dykword(s, t, '1');
                 if(DEBUG1)printf("V is %d\n", v);
                 if(v==true){
-                    q = next_bit_dykword(s, p, '0');
+                    q = next_bit_dykword(s, t, '0');
                     if(DEBUG1)printf("s at q is %c\n", s[q]);
                     if(DEBUG1)printf("q is %d\n", q);
-                    replace_in_string(s, '(', p);
+                    replace_in_string(s, '(', t);
                     replace_in_string(s, ')', q);
                     return dyk_word_1(s);
                     break; 
                 }
             }
-            p++;
+            t++;
 
         }
 
@@ -231,12 +233,14 @@ static String shift_left_by_one(String s)
 {
     String temp1 = NULL;
     String temp2 = NULL;
-    temp1 = stringsegmentcopy(s, 2, 7);
+    temp1 = stringsegmentcopy(s, 2, stringlen(s));
+    PR("temp 1 is %s\n", temp1);
     temp2 = stringsegmentcopy(s, 1, 1);
-    temp1 = stringcat(temp1, temp2);
-    //printf("Left shift string %s\n", temp1);
+    PR("temp2 %s\n", temp2);
+    String conc = stringcat(temp1, 1, temp2);
+    PR("Left shift string \n");
     destroystring(temp2);
-    return temp1;
+    return conc;
 }
 
 
@@ -258,12 +262,16 @@ Strings test_7(void)
     add_to_stringarray(firstTen, "0101110");
     for(int count = 10; count < 70; count++){
         firstTen[count] = shift_left_by_one(firstTen[count-10]);
+        //printf("%s\n", firstTen[count]);
     }
-    for_each(x, 70){
+    for(int x = 0; x<70; x++){
+        if(x == 10){
+            printf("\n");
+        }
         if(x < 9) printf("%s | %d|\n", firstTen[x], (x+1));
         else printf("%s |%d|\n", firstTen[x], (x+1));
     }
-    for_each(x, 69)
+    for(int x = 0; x < 69; x++)
         for(int i = x+1; i < 70; i++){
             if(strcmp(firstTen[x], firstTen[i])==0){
                 printf("x is %d i is |%d| string is %s\n", x, i, firstTen[x]);
@@ -273,6 +281,55 @@ Strings test_7(void)
     return firstTen;
 }
 
+Strings test_9(void)
+{
+    new_object(Strings, SS, 1000);
+    add_to_stringarray(SS, "000001111");
+    add_to_stringarray(SS, "010001111");
+    add_to_stringarray(SS, "010001011");
+    add_to_stringarray(SS, "010011011");
+    add_to_stringarray(SS, "010011001");
+    add_to_stringarray(SS, "010111001");
+    add_to_stringarray(SS, "010101001");
+    add_to_stringarray(SS, "010101101");
+    add_to_stringarray(SS, "010001101");
+    add_to_stringarray(SS, "010011101");
+    add_to_stringarray(SS, "010011100");
+    add_to_stringarray(SS, "011011100");
+    add_to_stringarray(SS, "011001100");
+    add_to_stringarray(SS, "011101100");
+    add_to_stringarray(SS, "011100100");
+    add_to_stringarray(SS, "011110100");
+    add_to_stringarray(SS, "011110000");
+    add_to_stringarray(SS, "011111000");
+    add_to_stringarray(SS, "010111000");
+    add_to_stringarray(SS, "010111100");
+    add_to_stringarray(SS, "010011100");
+    add_to_stringarray(SS, "010011110");
+    add_to_stringarray(SS, "010010110");
+    add_to_stringarray(SS, "010110110");
+    add_to_stringarray(SS, "010100110");
+    add_to_stringarray(SS, "010101110");
+    add_to_stringarray(SS, "010001110");
+    add_to_stringarray(SS, "010011110");
+    for_each(28, 252)
+        SS[x] = shift_left_by_one(SS[x-28]);
+
+    for(int i = 0; i < 251; i++){
+        for(int j = i+1; j < 252; j++){
+            if(strcmp(SS[i], SS[j])==0){
+                printf("Duplicate Strings\n%s %d %s %d\n", SS[i], i, SS[j], j);
+            }
+        }
+    }
+    for_all(252){
+        if(x == 28)printf("\n\n");
+        printf("%s |%d|\n", SS[x], (x+1));
+    }    
+    destroystringarray(SS);
+    return NULL;
+
+}
 
 
 
@@ -373,25 +430,25 @@ String print_vertex(AnyData v)
     assert(badstring(v1->string)==false);
     printer = stringcopy("String Value: ");
     String s1 = stringcopy(v1->string);
-    printer = stringcat(printer, s1);
+    printer = stringcat(printer, 1, s1);
     destroystring(s1);
-    printer = stringcat(printer, "Neighbors: ");
+    printer = stringcat(printer, 1, "Neighbors: ");
     int i = 0;
     while(v1->neighbors[i] != NULL){
-        printer = stringcat(printer, v1->neighbors[i]->string);
-        printer = stringcat(printer, " ");
+        printer = stringcat(printer, 1, v1->neighbors[i]->string);
+        printer = stringcat(printer, 1, " ");
         i++;
     }
     if(v1->deadEnd == true){
-        printer = stringcat(printer, " DEAD END");
+        printer = stringcat(printer, 1, " DEAD END");
     }
     if(v1->seed == true){
-        printer = stringcat(printer, " SEED");
+        printer = stringcat(printer, 1, " SEED");
     }
     if(v1->visited == true){
-        printer = stringcat(printer, " Visitied");
+        printer = stringcat(printer, 1, " Visitied");
     }else{
-       printer =  stringcat(printer, " Not Visited");
+       printer =  stringcat(printer, 1, " Not Visited");
     }
     return printer;
 

@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "String.h"
+#include "DynamicString.h"
 #include "HashMap.h"
 #include "utilities.h"
 #include <assert.h>
@@ -320,10 +320,10 @@ char* map_to_string(HashMap map)
          Node n = (Node)itr.current;
          if(n->inUse == 1){
             char* k = stringcopy("KEY: VALUE: ");
-            printer = stringcat(printer, k);
+            printer = stringcat(printer, 1, k);
             char* temp = map->printData(n->data);
-            printer = stringcat(printer, temp);
-            printer = stringcat(printer, "\n\n");
+            printer = stringcat(printer, 1, temp);
+            printer = stringcat(printer, 1, "\n\n");
             destroystring(temp);
             destroystring(k);
          }
