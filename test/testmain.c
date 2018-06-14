@@ -19,7 +19,8 @@ bool debug7 = true;
 bool debug9 = false;
 
 
-
+//github why
+//plase
 void delete_vertex(AnyData v)
 {
    CubeVertex v1 = (CubeVertex)(v);
