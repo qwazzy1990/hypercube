@@ -11,11 +11,11 @@
 
 /** DEBUGGING AND PRINTING MACRO**/
 #define DEBUGPRINT false
-#define PR if(DEBUGPRINT)printf
+#define P if(DEBUGPRINT)printf
 
 
 /***CONSTRUCTORS***/
-#define new(type, myarg, size) type* myarg = calloc(size, sizeof(*myarg))
+#define new(type, myarg, size) type myarg = calloc(size, sizeof(*myarg))
 
 #define new_object(type, myarg, size) type myarg = calloc(size, sizeof(*myarg))
 
@@ -30,9 +30,8 @@
 
 #define for_all(number) for(int x = 0; x < number; x++)
 
-#define iterate_array(number) for(int x = 0; x < number-1; x++)\
-								    for(int y = x+1; y<number; y++)\
-									
+#define double_for(number) for(int x = 0; x < number-1; x++)\
+								for(int y = x+1; y<number; y++)\
 
 //MACRO TO GET THE SIZE OF THE DATA THAT A POINTER IS POINTING TO
 #define SIZE(x) sizeof(*x)

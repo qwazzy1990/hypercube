@@ -444,18 +444,18 @@ String stringcat(String s, int n, ...)
                 c = stringcopy(temp);
             }else{
                 resize_string(c, memSize);
-                PR("Debug %s\n", c);
+                P("Debug %s\n", c);
                 end = stringlen(c);
                 for_each(x, stringlen(temp)+1){
                     c[end] = temp[x];
                     end++;
                 }
                 c[end] = '\0';
-                PR("c is %s\n", c);
+                P("c is %s\n", c);
             }
         }
         va_end(list);
-        if(c == NULL)PR("What the fuck\n");
+        if(c == NULL)P("What the fuck\n");
         return c;
     }
     else{
@@ -830,7 +830,7 @@ EqualStringStatus strequal(String s1, String s2, CaseSensitivity c)
                 equivelenceStatus->message = stringcopy("Strings differ: Check index to see at which index they differ");
                 equivelenceStatus->equal = false;
                 equivelenceStatus->index = x;
-                PR("%s %s\n", temp1, temp2);
+                P("%s %s\n", temp1, temp2);
                 destroystring(temp1);
                 destroystring(temp2);
                 return equivelenceStatus;

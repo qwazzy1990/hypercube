@@ -15,8 +15,8 @@ bool debug3  = false;
 bool debug4 = false;
 bool debug5 = false;
 bool debug6 = false;
-bool debug7 = true;
-bool debug9 = false;
+bool debug7 = false;
+bool debug9 = true;
 
 
 //github why
@@ -127,7 +127,7 @@ int main(int argc, String argv[])
   }
   if(debug6){
   
-    generate_hamiltonian_paths(7, 3);
+    generate_hamiltonian_paths(9, 4);
   }
   if(debug7){
     Strings k = test_7();
@@ -143,6 +143,7 @@ int main(int argc, String argv[])
        if(strcmp(s[x], s[y])==0)printf("%s %s\n", s[x], s[y]);
      }
      destroystringarray(s);*/
+     //printf("Is neclance = %d\n", is_necklace("00011", "1010"));
   }
   return 0;
 }

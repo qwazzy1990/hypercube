@@ -14,6 +14,9 @@
 
 #define destroy_vertex(myarg) destroy_vertex_real(&myarg)
 
+#define SEVEN false
+#define NINE true
+
 enum vs{DEAD_END, SEED};
 typedef enum vs VertexStatus;
 
@@ -116,7 +119,13 @@ Strings cyclic_decomposition(String s);
 
 Strings test_7( void );
 
+				/******TEST FOR N = 9*****/
+
+void back_track_nine(HashMap map, String binaryString, Strings startingSet, char bit, int n, int maxLevel);
+
 Strings test_9( void );
+
+bool is_necklace(String set, String s);
 
 #endif
 

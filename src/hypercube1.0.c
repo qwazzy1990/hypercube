@@ -234,11 +234,11 @@ static String shift_left_by_one(String s)
     String temp1 = NULL;
     String temp2 = NULL;
     temp1 = stringsegmentcopy(s, 2, stringlen(s));
-    PR("temp 1 is %s\n", temp1);
+    P("temp 1 is %s\n", temp1);
     temp2 = stringsegmentcopy(s, 1, 1);
-    PR("temp2 %s\n", temp2);
+    P("temp2 %s\n", temp2);
     String conc = stringcat(temp1, 1, temp2);
-    PR("Left shift string \n");
+    P("Left shift string \n");
     destroystring(temp2);
     return conc;
 }
@@ -262,7 +262,6 @@ Strings test_7(void)
     add_to_stringarray(firstTen, "0101110");
     for(int count = 10; count < 70; count++){
         firstTen[count] = shift_left_by_one(firstTen[count-10]);
-        //printf("%s\n", firstTen[count]);
     }
     for(int x = 0; x<70; x++){
         if(x == 10){
@@ -281,37 +280,44 @@ Strings test_7(void)
     return firstTen;
 }
 
+                        /*******TEST 9*******/
+
 Strings test_9(void)
 {
     new_object(Strings, SS, 1000);
+
+    /***KNOWN FIRST 11***/
     add_to_stringarray(SS, "000001111");
-    add_to_stringarray(SS, "010001111");
+    add_to_stringarray(SS, "100001111");
+    add_to_stringarray(SS, "100001011");
+    add_to_stringarray(SS, "110001011");
     add_to_stringarray(SS, "010001011");
-    add_to_stringarray(SS, "010011011");
-    add_to_stringarray(SS, "010011001");
-    add_to_stringarray(SS, "010111001");
-    add_to_stringarray(SS, "010101001");
-    add_to_stringarray(SS, "010101101");
-    add_to_stringarray(SS, "010001101");
-    add_to_stringarray(SS, "010011101");
-    add_to_stringarray(SS, "010011100");
-    add_to_stringarray(SS, "011011100");
-    add_to_stringarray(SS, "011001100");
-    add_to_stringarray(SS, "011101100");
-    add_to_stringarray(SS, "011100100");
-    add_to_stringarray(SS, "011110100");
-    add_to_stringarray(SS, "011110000");
-    add_to_stringarray(SS, "011111000");
-    add_to_stringarray(SS, "010111000");
-    add_to_stringarray(SS, "010111100");
-    add_to_stringarray(SS, "010011100");
-    add_to_stringarray(SS, "010011110");
-    add_to_stringarray(SS, "010010110");
-    add_to_stringarray(SS, "010110110");
-    add_to_stringarray(SS, "010100110");
-    add_to_stringarray(SS, "010101110");
-    add_to_stringarray(SS, "010001110");
-    add_to_stringarray(SS, "010011110");
+    add_to_stringarray(SS, "011001011");
+    add_to_stringarray(SS, "001001011");
+    add_to_stringarray(SS, "101001011");
+    add_to_stringarray(SS, "101000011");
+    add_to_stringarray(SS, "101100011");
+    add_to_stringarray(SS, "001100011");
+
+
+    add_to_stringarray(SS, "011100011");
+    add_to_stringarray(SS, "011000011");
+    add_to_stringarray(SS, "011010011");
+    add_to_stringarray(SS, "001010011");
+    add_to_stringarray(SS, "101010011");
+    add_to_stringarray(SS, "100010011");
+    add_to_stringarray(SS, "100110011");
+    add_to_stringarray(SS, "100100011");
+    add_to_stringarray(SS, "100100111");
+    add_to_stringarray(SS, "100100110");
+
+    add_to_stringarray(SS, "101100110");
+    add_to_stringarray(SS, "101100010");
+    add_to_stringarray(SS, "101110010");
+    add_to_stringarray(SS, "101010010");
+    add_to_stringarray(SS, "101011010");
+    add_to_stringarray(SS, "100011010");
+    add_to_stringarray(SS, "100011110");
     for_each(28, 252)
         SS[x] = shift_left_by_one(SS[x-28]);
 
@@ -322,8 +328,9 @@ Strings test_9(void)
             }
         }
     }
+    printf("PATH:\n\n");
     for_all(252){
-        if(x == 28)printf("\n\n");
+        if((x % 28) == 0)printf("\n\n");
         printf("%s |%d|\n", SS[x], (x+1));
     }    
     destroystringarray(SS);
@@ -331,6 +338,131 @@ Strings test_9(void)
 
 }
 
+static bool check_necklace(Strings startingSet, String s)
+{
+     int i = 0;
+     while(i < 28){
+         if(startingSet[i] == NULL){
+             i++;
+         }else{
+             bool isNecklace = is_necklace(startingSet[i], s);
+             if(isNecklace == true){
+                //printf("NECKLACES:\n%d %s %s\n\n", i+1, startingSet[i], s);
+                return true;
+             }
+             else i++;
+         }
+     }
+     return false;
+}
+ bool is_necklace(String set, String s){
+    String temp = stringcopy(s);
+    for_all(stringlen(temp)){
+        if(strcmp(temp, set)==0){
+            destroystring(temp);
+            return true;
+        }else{
+            String t1 = stringsegmentcopy(temp, 2, stringlen(temp));
+            String t2 = stringsegmentcopy(temp, 1, 1);
+            t1 = stringcat(t1, 1, t2);
+            destroystring(temp);
+            temp = stringcopy(t1);
+            destroystring(t1);
+            destroystring(t2);
+        }
+    }
+    destroystring(temp);
+    return false;
+}
+void back_track_nine(HashMap map, String binaryString, Strings startingSet, char bit, int n, int maxLevel)
+{
+    if(n > 1)
+        if(check_necklace(path, binaryString)==true){
+            return;
+        }
+    /*if(n > 1)
+        if(check_necklace(startingSet, binaryString)==true)
+            return;*/
+
+    String nextString = NULL;
+    if(n == maxLevel){
+        Strings neighbors = generate_neighbors(binaryString);
+        int i = 0;
+        while(neighbors[i] != NULL){
+            if(strncmp(neighbors[i], "000011110", 10) == 0){
+                add_to_stringarray(path, binaryString);
+                double_for(maxLevel){
+                    if(strcmp(path[x], path[y])==0){
+                        remove_from_stringarray(path, path[x]);
+                    }
+                }
+                String printer = printstringarray(path);
+                /*for(int i = 0; i < maxLevel; i++)
+                    for(int j = 0; j < 10; j++)
+                        if(is_necklace(path[i], startingSet[j])){
+                            printf("Oh no! Strings are\n%s %s\n", path[i], startingSet[j]);
+                        }*/
+                printf("PATH FOUND\n\n");
+                printf("%s\n", printer);
+                printf("\n\n");
+                destroystringarray(neighbors);
+                destroystring(printer);
+                return;
+
+            }
+            else i++;
+        }
+        destroystringarray(neighbors);
+        return;
+    }
+    else{
+        nextString = stringcopy(binaryString);
+        int i = 0;
+        CubeVertex currentVertex  = (CubeVertex)map->table[hash(map, binaryString)]->data;
+         for(i = 0; i < stringlen(binaryString); i++){
+           /*if(i == 0 || i == 1 || i == 8){
+               continue;
+           }*/
+           if(binaryString[i] == bit){
+               set_bit(&nextString, i);
+               CubeVertex temp = (CubeVertex)map->table[hash(map, nextString)]->data;
+               
+               if(temp->visited == false){
+                   currentVertex->visited = true;
+                   add_to_stringarray(path, currentVertex->string);
+                   if(bit == '1'){
+                       bit = '0';
+                   }else{
+                       bit = '1';
+                   }
+                   back_track_nine(map, nextString, startingSet, bit, n+1, maxLevel);
+                   
+                   if(bit == '1'){
+                       bit = '0';
+                   }else{
+                       bit = '1';
+                   }
+                   currentVertex->visited = false;
+                   remove_from_stringarray(path, currentVertex->string);
+                   set_bit(&nextString, i);
+                }
+                else{
+                    set_bit(&nextString, i);
+                    continue;
+                }
+            }
+            
+            
+        }
+        if(i == stringlen(binaryString)){
+            if(DEBUG1)printf("DEAD END %s at level %d\n", binaryString, n);
+            currentVertex->visited = false;
+            currentVertex->deadEnd = true;
+            remove_from_stringarray(path, currentVertex->string);
+            destroystring(nextString);        
+        }
+    }
+}
 
 
 
@@ -421,7 +553,7 @@ CubeVertecies generate_vertecies(int n, int k)
 
 
 
-                                           /***********PRINTERS*******/
+                                           /***********PINTERS*******/
 String print_vertex(AnyData v)
 {
     assert(v != NULL);
@@ -683,11 +815,38 @@ void generate_hamiltonian_paths(int n, int k)
     if(DEBUG1)printf("Temp String is %s\n", tempString);
     CubeVertex tempVertex = (CubeVertex)map->table[hash(map, tempString)]->data;
     tempVertex->seed = false;
-    String seed = stringcopy(m[0]->string);
+    String seed = NULL;
     if(DEBUG1)printf("Seed is %s\n", seed);
-    unsigned long maxLevel = 2 * (n_choose_k(n, k));
-    if(DEBUG1)printf("Max level is %ld\n", maxLevel);
-    back_track(map, seed, 1, '0', maxLevel);
+    if(SEVEN){
+        unsigned long maxLevel = 2 * (n_choose_k(n, k));
+        if(DEBUG1)printf("Max level is %ld\n", maxLevel);
+        seed = stringcopy(m[0]->string);
+        back_track(map, seed, 1, '0', maxLevel);
+    }
+    if(NINE){
+         new_object(Strings, SS, 1000);
+        
+        add_to_stringarray(SS, "000001111");
+        add_to_stringarray(SS, "010001111");
+        add_to_stringarray(SS, "010001011");
+        add_to_stringarray(SS, "010011011");
+        add_to_stringarray(SS, "010011001");
+        add_to_stringarray(SS, "010111001");
+        add_to_stringarray(SS, "010101001");
+        add_to_stringarray(SS, "010101101");
+        add_to_stringarray(SS, "010001101");
+        add_to_stringarray(SS, "010011101");
+        add_to_stringarray(SS, "010011100");
+
+        double_for(11){
+            if(is_necklace(SS[x], SS[y])==true){
+                printf("WTF %s %s\n", SS[x], SS[y]);
+            }
+        }
+        seed = stringcopy(SS[0]);
+        back_track_nine(map, seed, SS, '0', 1, 28);
+        destroystringarray(SS);
+    }
     destroystring(seed);
     destroystring(tempString);
     free(m);

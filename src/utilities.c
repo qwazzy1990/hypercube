@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
-#include "../include/utilities.h"
+#include "utilities.h"
 
 void swap(void* a, void* b, SwapFunc s)
 {
