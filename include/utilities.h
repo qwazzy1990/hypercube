@@ -9,32 +9,41 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define clear(myarg) clear_real((void*)&myarg); myarg = NULL
+
+
 /** DEBUGGING AND PRINTING MACRO**/
-#define DEBUGPRINT false
+#define DEBUGPRINT true
 #define P if(DEBUGPRINT)printf
 
 
+
 /***CONSTRUCTORS***/
-#define new(type, myarg, size) type myarg = calloc(size, sizeof(*myarg))
+#define new(type, myarg, size) type* myarg = calloc(size, sizeof(*myarg))
 
 #define new_object(type, myarg, size) type myarg = calloc(size, sizeof(*myarg))
 
 /***MEMORY ALLOCATERS***/
 #define mem_alloc(myarg, size) myarg = calloc(size, sizeof(*myarg))
 
-#define resize(myarg, size) \
-							myarg = realloc(myarg, 1000);\
+#define resize(myarg, size) myarg = realloc(myarg, 1000);
+
+							/******DESTROYERS FOR SINGLE AND DOUBLE POINTERS TO ANY DATA****/
+
 
 /**ITERATORS**** Do not use a variable 'x' in block of code when using iterator. Will cause unpredicted beghavior**/
-#define for_each(index, number) for(int x=index; x<number; x++)
+#define foreach(index, number) for(int x=index; x<number; x++)
 
-#define for_all(number) for(int x = 0; x < number; x++)
+#define forall(number) for(int x = 0; x < number; x++)
 
-#define double_for(number) for(int x = 0; x < number-1; x++)\
-								for(int y = x+1; y<number; y++)\
+#define doublefor(number) for(int x = 0; x < number-1; x++)\
+								for(int y = x+1; y<number; y++)
 
 //MACRO TO GET THE SIZE OF THE DATA THAT A POINTER IS POINTING TO
 #define SIZE(x) sizeof(*x)
+
+
+
 
 /***SIZES OF PRIMITIVES***/
 #define CHAR_SIZE 1
@@ -129,6 +138,23 @@ int* test_clone(void* a);
 						/**************MEMORY ALLOCATERS*********/
 
 void resize_real(AnyData* a, int size);
+
+
+						/*********DESTROYERS*******/
+
+
+void clear_real(AnyData d);
+
+
+				/******DUMMY FUNCTIONS: DEFAULT TYPE IS int* ****/
+
+int dummy_compare(const void* a, const void* b);
+
+char* dummy_print(AnyData p);
+
+void dummy_delete(AnyData d);
+
+
 
 
 #endif

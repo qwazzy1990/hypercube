@@ -14,9 +14,9 @@ bool debug2 = false;
 bool debug3  = false;
 bool debug4 = false;
 bool debug5 = false;
-bool debug6 = false;
+bool debug6 = true;
 bool debug7 = false;
-bool debug9 = true;
+bool debug9 = false;
 
 
 //github why
@@ -67,12 +67,12 @@ int main(int argc, String argv[])
       CubeVertecies l = generate_vertecies(5, 3);
       ErrorCode mapStatus = 0;
     
-      for_each(x, 10)
+      foreach(x, 10)
       {
          mapStatus = put_hashmap(map, k[x]->string, k[x]);
          print_error_code(mapStatus);
       }
-      for_each(x, 10){
+      foreach(x, 10){
         mapStatus = put_hashmap(map, l[x]->string, l[x]);
         print_error_code(mapStatus);
       }
@@ -127,7 +127,7 @@ int main(int argc, String argv[])
   }
   if(debug6){
   
-    generate_hamiltonian_paths(9, 4);
+    generate_hamiltonian_paths(7, 3);
   }
   if(debug7){
     Strings k = test_7();
@@ -135,15 +135,6 @@ int main(int argc, String argv[])
   }
   if(debug9){
      test_9();
-     /*new_object(Strings, s, 10);
-     for_all(10){
-       s[x] = stringcopy($(x));
-     }
-     iterate_array(10){
-       if(strcmp(s[x], s[y])==0)printf("%s %s\n", s[x], s[y]);
-     }
-     destroystringarray(s);*/
-     //printf("Is neclance = %d\n", is_necklace("00011", "1010"));
   }
   return 0;
 }

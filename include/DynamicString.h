@@ -290,7 +290,7 @@ bool badstring(String s);
 bool isstatic(String s);
 
 bool is_upper_real(char c);
-EqualStringStatus strequal(String s1, String s2, CaseSensitivity c);
+bool strequal(String s1, String s2, CaseSensitivity c);
 
 
                     /**

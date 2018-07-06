@@ -16,6 +16,7 @@
 
 #define SEVEN false
 #define NINE true
+#define ELEVEN false
 
 enum vs{DEAD_END, SEED};
 typedef enum vs VertexStatus;
@@ -96,7 +97,7 @@ CubeVertex clone_vertext(CubeVertex v);
 						/**********BACK TRACKING ALGORITHM************/
 void back_track(HashMap map, String binaryString, int n, char bit, int maxDepth);
 
-void set_bit(Strings s, int n);
+void set_bit(String* s, int n);
 
 
 
@@ -121,7 +122,7 @@ Strings test_7( void );
 
 				/******TEST FOR N = 9*****/
 
-void back_track_nine(HashMap map, String binaryString, Strings startingSet, char bit, int n, int maxLevel);
+void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxLevel);
 
 Strings test_9( void );
 
