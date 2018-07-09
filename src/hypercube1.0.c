@@ -110,12 +110,17 @@ static long mid_bit_plus_one(int n){
 /**FIX ME**/
 static unsigned long final_bit_range(int n)
 {
-    int numerator = n-2;
+    /*int numerator = n-2;
     int k = n/2;
     k--;
     numerator = 2*(n_choose_k(numerator, k));
     int denominator = n-2;
-    unsigned long result = numerator/denominator;
+    unsigned long result = numerator/denominator;*/
+
+    if(n == 3){
+        return 1;
+    }
+    unsigned long result = 2*final_bit_range(n-2);
 
     return result;
 }
@@ -507,9 +512,9 @@ void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxL
                 add_to_stringarray(path, binaryString);
                 doublefor(maxLevel)
                 {
-                    if(path[x] == NULL || path[y] == NULL){
+                    /*if(path[x] == NULL || path[y] == NULL){
                         break;
-                    }
+                    }*/
                     if (strcmp(path[x], path[y]) == 0)
                     {
                         remove_from_stringarray(path, path[x]);
@@ -547,18 +552,18 @@ void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxL
         CubeVertex currentVertex = (CubeVertex)map->table[hash(map, binaryString)]->data;
 
         //for
-        for (i = 0; i < stringlen(binaryString); i++)
+        for (i = 1; i < stringlen(binaryString); i++)
         {
             /***TESTING CONDITIONAL HYPTHESIS***/
             //if
-            /*if (i == 1 && n > 1){
+            if (i == 1 && n > 1){
                 continue;
             }//endif
             //if
             if (i == mid_bit_plus_one(strlen(binaryString))){
                 continue;
             }//endif
-            if(n == finalBitRange){
+            /*if(n == finalBitRange){
                 i = stringlen(binaryString)-1;
             }
             if(n > finalBitRange && i == stringlen(binaryString)-1){
@@ -1010,7 +1015,7 @@ void generate_hamiltonian_paths(int n, int k)
     tempVertex->seed = false;
     String seed = stringcopy(m[0]->string);
     finalBitRange = final_bit_range(n);
-
+    //printf("Final Bit Range is %ld\n", finalBitRange);
 
     back_track_nine(map, seed, '0', 1, number_of_starting_strings(n, k));
     destroystring(seed);
