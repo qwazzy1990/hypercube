@@ -4,7 +4,6 @@ CFLAGS = -Wall -std=c11 -g -pedantic
 program: makeprogram runprogram
 
 makeprogram:
-	mkdir bin
 	$(CC) $(CFLAGS) -Iinclude -lm src/utilities.c src/HashMap.c src/DynamicString.c src/hypercube1.0.c test/main.c -o bin/prog1
 
 runprogram:
@@ -23,4 +22,4 @@ mem-leak: maketest
 	valgrind --leak-check=full --show-leak-kinds=all ./bin/test
 
 clean:
-	rm bin -r
+	rm ./bin/prog1

@@ -124,6 +124,8 @@ Strings test_7( void );
 
 void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxLevel);
 
+void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLevel);
+
 Strings test_9( void );
 
 bool is_necklace(String set, String s);

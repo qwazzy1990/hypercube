@@ -11,6 +11,9 @@
 #include "utilities.h"
 
 bool DEBUG1 = false;
+bool FBRFLAG = true;
+
+//FILE* FP = NULL;
 
 unsigned long globalCount = 0;
 
@@ -26,6 +29,7 @@ void swap_char(String a, String b)
     *a = *b;
     *b = temp;
 }
+
 
 /********STATIC FUNCTIONS AND VARIABLES******/
 
@@ -107,20 +111,23 @@ static long mid_bit_plus_one(int n){
     return d;
 }
 
-/**FIX ME**/
 static unsigned long final_bit_range(int n)
 {
-    /*int numerator = n-2;
-    int k = n/2;
-    k--;
-    numerator = 2*(n_choose_k(numerator, k));
-    int denominator = n-2;
-    unsigned long result = numerator/denominator;*/
-
-    if(n == 3){
-        return 1;
+    unsigned long result = 0;
+    if(FBRFLAG == true){
+        int numerator = n-2;
+        int k = n/2;
+        k--;
+        numerator = 2*(n_choose_k(numerator, k));
+        int denominator = n-2;
+        result = numerator/denominator;
     }
-    unsigned long result = 2*final_bit_range(n-2);
+    else{
+        if(n == 3){
+            return 1;
+        }
+        result = 2*final_bit_range(n-2);
+    }
 
     return result;
 }
@@ -326,6 +333,23 @@ static String shift_left_by_one(String s)
     return conc;
 }
 
+static String inverse_and_reverse(String s)
+{
+    String temp1 = NULL;
+    String temp2 = NULL;
+    temp1 = stringcopy(s);
+    forall(stringlen(temp1)){
+        if(temp1[x] == '0'){
+            temp1[x] = '1';
+        }else{
+            temp1[x] = '0';
+        }
+    }
+    temp2 = reversestring(temp1);
+    return temp2;
+}
+
+
 /***** FUNCTION: TEST FOR N = 7*****/
 
 Strings test_7(void)
@@ -521,12 +545,21 @@ void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxL
                     }
                 }
                 String printer = printstringarray(path);
+                //freopen("./bin/output.txt", "w", stdout);
                 printf("PATH %ld FOUND \n\n", globalCount+1);
                 printf("%s\n", printer);
-                printf("\n\n");
+                printf("\n");
                 destroystringarray(neighbors);
                 destroystring(printer);
                 destroystring(nextString);
+                for(int i = 0; i < maxLevel-1; i++){
+                    for(int j = 0; j < stringlen(binaryString); j++){
+                        if(path[i][j] != path[i+1][j]){
+                            printf("%d\n", j+1);
+                        }
+                    }
+                }
+                printf("\n\n");
                 for(int i = 1; i < maxLevel; i++){
                     destroystring(path[i]);
                 }
@@ -552,17 +585,19 @@ void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxL
         CubeVertex currentVertex = (CubeVertex)map->table[hash(map, binaryString)]->data;
 
         //for
-        for (i = 1; i < stringlen(binaryString); i++)
+        for (i = 0; i < stringlen(binaryString); i++)
         {
             /***TESTING CONDITIONAL HYPTHESIS***/
             //if
-            if (i == 1 && n > 1){
+            /*if (i == 1 && n > 1){
                 continue;
-            }//endif
+            }//endif*/
             //if
-            if (i == mid_bit_plus_one(strlen(binaryString))){
+            /*if (i == mid_bit_plus_one(strlen(binaryString))){
                 continue;
-            }//endif
+            }//endif*/
+
+            /***IF YOU WANT TO TEST ANOTHER HYPOTHESIS FOR THE LAST BIT THEN UNCOMMENT LINES 568 TO 573***/
             /*if(n == finalBitRange){
                 i = stringlen(binaryString)-1;
             }
@@ -635,6 +670,147 @@ void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxL
     }//end else
 
 }//end function
+
+void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLevel)
+{
+    String nextString = NULL;
+    //if
+    if(n > 1){
+        if(check_necklace(path, binaryString)){
+            return;
+        }
+    }//endif
+
+    int i = 0;
+
+    //if
+    if(n == maxLevel){
+        add_to_stringarray(path, binaryString);
+        int count = 0;
+        //while
+        /*while(path[count]!=NULL){
+            count++;
+        }//endwhile
+
+        //if
+        if(count != maxLevel){
+            return;
+        }//endif*/
+        
+
+        Strings printPath = stringarraycopy(path);
+        int memSize = (2*maxLevel + 1);
+        printPath = realloc(printPath, memSize*sizeof(String));
+        int index = memSize -2;
+
+        //for
+        forall(maxLevel){
+            printPath[index] = inverse_and_reverse(printPath[x]);
+            index--;
+        }//endfor
+        printPath[memSize-1] = NULL;
+
+        String printer = printstringarray(printPath);
+        free(printer);
+
+        //check necklace class
+        doublefor(memSize-1){
+            if(is_necklace(printPath[x], printPath[y])){
+                printf("%s and %s are in same necklace class\n", printPath[x], printPath[y]);
+                destroystringarray(printPath);
+                destroystring(path[memSize-2]);
+                return;
+            }
+        }//end check
+
+
+        printf("Path Found:\n");
+        printstringarray(printPath);
+        destroystringarray(printPath);
+        foreach(1, maxLevel){
+            destroystring(path[x]);
+        }
+        return;
+
+
+    }//endif
+
+    //else backtrack
+   //else
+    else
+    {
+        nextString = stringcopy(binaryString);
+        CubeVertex currentVertex = (CubeVertex)map->table[hash(map, binaryString)]->data;
+
+        //for
+        for (i = 0; i < stringlen(binaryString); i++)
+        {
+            //if
+            if (binaryString[i] == bit)
+            {
+                set_bit(&nextString, i);
+                CubeVertex temp = (CubeVertex)map->table[hash(map, nextString)]->data;
+                if(temp == NULL)printf("Why\n");
+                //if
+                if (temp->visited == false)
+                {
+                    currentVertex->visited = true;
+                    add_to_stringarray(path, currentVertex->string);
+                    //if
+                    if (bit == '1')
+                    {
+                        bit = '0';
+                    }//endif
+
+                    //else
+                    else
+                    {
+                        bit = '1';
+                    }//endelse
+
+                    back_track_two(map, nextString, bit, n + 1, maxLevel);
+
+                    //if
+                    if (bit == '1')
+                    {
+                        bit = '0';
+                    }//endif
+
+                    //else
+                    else
+                    {
+                        bit = '1';
+                    }//end else
+                    currentVertex->visited = false;
+                    remove_from_stringarray(path, currentVertex->string);
+                    set_bit(&nextString, i);
+                }//endif
+
+                //else
+                else
+                {
+                    set_bit(&nextString, i);
+                    continue;
+                }//endelse
+            }//if
+        }//end for
+        //end else
+
+        //if
+        if (i == stringlen(binaryString))
+        {
+    
+            currentVertex->visited = false;
+            currentVertex->deadEnd = true;
+            remove_from_stringarray(path, currentVertex->string);
+            destroystring(nextString);
+            return;
+        }//endif
+
+        
+    }//end else
+
+}
 
 /****CONSTRUCTORS****/
 
@@ -1017,12 +1193,18 @@ void generate_hamiltonian_paths(int n, int k)
     finalBitRange = final_bit_range(n);
     //printf("Final Bit Range is %ld\n", finalBitRange);
 
-    back_track_nine(map, seed, '0', 1, number_of_starting_strings(n, k));
+    int maxLevel = number_of_starting_strings(n, k);
+    maxLevel = maxLevel/2;
+    back_track_two(map, seed, '0', 1, maxLevel);
+    //back_track_nine(map, seed, '0', 1, number_of_starting_strings(n, k));
     destroystring(seed);
     destroystring(tempString);
     clear(m);
     clear(l);
     destroy_hashmap(map);
+    /*if(FP != NULL){
+        fclose(FP);
+    }*/
     
 }
 

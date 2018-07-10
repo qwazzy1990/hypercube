@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[])
 {
-    printf("Please enter an odd lengthed number\n");
+    fprintf(stdout, "%s", "Please enter an odd number\n");
     int userInput = 0;
     scanf("%d", &userInput);
     int n = userInput;
