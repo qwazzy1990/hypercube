@@ -716,20 +716,23 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
         //check necklace class
         doublefor(memSize-1){
             if(is_necklace(printPath[x], printPath[y])){
-                printf("%s and %s are in same necklace class\n", printPath[x], printPath[y]);
+                //printf("%s and %s are in same necklace class\n\n\n", printPath[x], printPath[y]);
                 destroystringarray(printPath);
-                destroystring(path[memSize-2]);
+                destroystring(path[maxLevel - 1]);
                 return;
             }
         }//end check
 
 
-        printf("Path Found:\n");
-        printstringarray(printPath);
-        destroystringarray(printPath);
-        foreach(1, maxLevel){
-            destroystring(path[x]);
+        printf("Path %ld Found:\n", globalCount++);
+        forall(memSize - 1){
+            printf("%s\n", printPath[x]);
         }
+        //printstringarray(printPath);
+        destroystringarray(printPath);
+        destroystring(path[maxLevel - 1]);
+
+
         return;
 
 
