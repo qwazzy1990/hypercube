@@ -322,10 +322,10 @@ char* map_to_string(HashMap map)
          Node n = (Node)itr.current;
          if(n->inUse == 1){
             char* k = stringcopy("KEY: VALUE: ");
-            printer = stringcat(printer, 1, k);
+            printer = stringcat(printer, k);
             char* temp = map->printData(n->data);
-            printer = stringcat(printer, 1, temp);
-            printer = stringcat(printer, 1, "\n\n");
+            printer = stringcat(printer, temp);
+            printer = stringcat(printer, "\n\n");
             destroystring(temp);
             destroystring(k);
          }

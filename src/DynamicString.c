@@ -430,58 +430,30 @@ Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end)
 
 
 
-/**********FIX ME:********/
-String stringcat(String s, int n, ...)
+String stringcat(String dest, String source)
 {
-    va_list list;
-    va_start(list, n);
-    String c = NULL;
-    String temp = NULL;
-    int memSize = 0;
-    int end = 0;
-    if(s == NULL){
-        forall(n){
-            temp = va_arg(list, char*);
-            memSize += stringlen(temp)+1;
-            if(x == 0){
-                c = stringcopy(temp);
-            }else{
-                resize_string(c, memSize);
-                P("Debug %s\n", c);
-                end = stringlen(c);
-                forall(stringlen(temp)){
-                    c[end] = temp[x];
-                    end++;
-                }
-                c[end] = '\0';
-                P("c is %s\n", c);
-            }
-        }
-        va_end(list);
-        if(c == NULL)P("What the fuck\n");
-        return c;
+    if(source == NULL)return NULL;
+    if(dest == NULL){
+        dest = stringcopy(source);
+        return dest;
     }
-    else{
-        c = stringcopy(s);
-        memSize = stringlen(c)+1;
-        end = stringlen(c);
-        forall(n){
-            temp = va_arg(list, char*);
-            memSize = stringlen(temp)+1;
-            resize_string(c, memSize);
-            end = stringlen(c);
-            forall(stringlen(temp)){
-                c[end] = temp[x];
-                end++;
-            }
-            c[end] = '\0';
-        }
-        va_end(list);
-        destroystring(s);
-        return c;
+    if(stringlen(dest) <= 0){
+        //clear(dest);
+        dest = stringcopy(source);
+        return dest;
     }
-}
 
+    int memSize = stringlen(dest) + stringlen(source) + 1;
+    dest = realloc(dest, memSize*sizeof(char));
+    int count = stringlen(dest);
+    forall(stringlen(source)){
+        dest[count] = source[x];
+        count++;
+    }
+    dest[count] = '\0';
+    return dest;
+
+}
 
 
 String reversestring(String s)
@@ -591,7 +563,7 @@ String tostring(Primitive type, void* data)
             s[i] = c;
             i++;
           }//endwhile
-          s = stringcat(s, 1, "-");
+          s = stringcat(s, "-");
           s2 = reversestring(s);
           n = *d;
 
@@ -678,7 +650,7 @@ String tostring(Primitive type, void* data)
             }//endelse
             count--;
         }//endwhile
-        s = stringcat(s, 1, "-");
+        s = stringcat(s, "-");
         s2 = reversestring(s);
         destroystring(s);
 
@@ -686,6 +658,8 @@ String tostring(Primitive type, void* data)
       n = *fp;
 
     }//endif
+    destroystring(s);
+
     return s2;
 }
 
@@ -728,9 +702,9 @@ String printstringarray(Strings s)
     String printer = NULL;
     i = 0;
     while(s[i] != NULL){
-      printer = stringcat(printer, 1, s[i]);
+      printer = stringcat(printer, s[i]);
 
-      printer = stringcat(printer, 1, "\n");
+      printer = stringcat(printer, "\n");
       i++;
     }
     return printer;

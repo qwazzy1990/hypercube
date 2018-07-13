@@ -324,11 +324,11 @@ static String shift_left_by_one(String s)
     String temp1 = NULL;
     String temp2 = NULL;
     temp1 = stringsegmentcopy(s, 2, stringlen(s));
-    P("temp 1 is %s\n", temp1);
+    //P("temp 1 is %s\n", temp1);
     temp2 = stringsegmentcopy(s, 1, 1);
-    P("temp2 %s\n", temp2);
-    String conc = stringcat(temp1, 1, temp2);
-    P("Left shift string \n");
+    //P("temp2 %s\n", temp2);
+    String conc = stringcat(temp1, temp2);
+    //P("Left shift string \n");
     destroystring(temp2);
     return conc;
 }
@@ -346,6 +346,7 @@ static String inverse_and_reverse(String s)
         }
     }
     temp2 = reversestring(temp1);
+    destroystring(temp1);
     return temp2;
 }
 
@@ -494,7 +495,7 @@ bool is_necklace(String set, String s)
         {
             String t1 = stringsegmentcopy(temp, 2, stringlen(temp));
             String t2 = stringsegmentcopy(temp, 1, 1);
-            t1 = stringcat(t1, 1, t2);
+            t1 = stringcat(t1, t2);
             destroystring(temp);
             temp = stringcopy(t1);
             destroystring(t1);
@@ -702,17 +703,31 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
         int memSize = (2*maxLevel + 1);
         printPath = realloc(printPath, memSize*sizeof(String));
         int index = memSize -2;
+        printPath[memSize-1] = NULL;
 
         //for
         forall(maxLevel){
             printPath[index] = inverse_and_reverse(printPath[x]);
             index--;
         }//endfor
-        printPath[memSize-1] = NULL;
+        String checkOne = stringcopy(printPath[maxLevel-1]);
+        String checkTwo = stringcopy(printPath[maxLevel]);
+        int cc = 0;
+        forall(stringlen(binaryString)){
+            if(checkOne[x] != checkTwo[x]){
+                cc++;
+            }
+        }
+        destroystring(checkOne);
+        destroystring(checkTwo);
+        if(cc != 1){
+            destroystringarray(printPath);
+            destroystring(path[maxLevel - 1]);
+            return;
+        }
 
-        String printer = printstringarray(printPath);
-        free(printer);
 
+        
         //check necklace class
         doublefor(memSize-1){
             if(is_necklace(printPath[x], printPath[y])){
@@ -725,14 +740,46 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
 
 
         printf("Path %ld Found:\n", globalCount++);
+        int current = 0;
+        int next = 1;
+        forall((2*maxLevel)-1){
+            for(int k = 0; k < stringlen(binaryString); k++){
+                if(printPath[current][k] != printPath[next][k]){
+                    int br = k+1;
+                    String str = tostring(INT, &br);
+                    printPath[current] = realloc(printPath[current], 1000);
+                    strcat(printPath[current], " ");
+                    strcat(printPath[current], str);
+                    clear(str);
+                    break;
+                }
+            }
+            current++;
+            next++;
+        }
+        String leftRotation = shift_left_by_one(printPath[0]);
+        forall(stringlen(binaryString)){
+            if(printPath[current][x] != leftRotation[x]){
+                    int br = x+1;
+                    String str = tostring(INT, &br);
+                    printPath[current] = realloc(printPath[current], 1000);
+                    strcat(printPath[current], " ");
+                    strcat(printPath[current], str);
+                    clear(str);
+                    break;
+
+            }
+        }
+        destroystring(leftRotation);
         forall(memSize - 1){
             printf("%s\n", printPath[x]);
+            if(x == ((2*maxLevel)/2)-1){
+                printf("---------------------------------\n");
+            }
         }
-        //printstringarray(printPath);
+        printf("\n");
         destroystringarray(printPath);
         destroystring(path[maxLevel - 1]);
-
-
         return;
 
 
@@ -915,31 +962,31 @@ String print_vertex(AnyData v)
     assert(badstring(v1->string) == false);
     printer = stringcopy("String Value: ");
     String s1 = stringcopy(v1->string);
-    printer = stringcat(printer, 1, s1);
+    printer = stringcat(printer, s1);
     destroystring(s1);
-    printer = stringcat(printer, 1, "Neighbors: ");
+    printer = stringcat(printer, "Neighbors: ");
     int i = 0;
     while (v1->neighbors[i] != NULL)
     {
-        printer = stringcat(printer, 1, v1->neighbors[i]->string);
-        printer = stringcat(printer, 1, " ");
+        printer = stringcat(printer, v1->neighbors[i]->string);
+        printer = stringcat(printer, " ");
         i++;
     }
     if (v1->deadEnd == true)
     {
-        printer = stringcat(printer, 1, " DEAD END");
+        printer = stringcat(printer, " DEAD END");
     }
     if (v1->seed == true)
     {
-        printer = stringcat(printer, 1, " SEED");
+        printer = stringcat(printer, " SEED");
     }
     if (v1->visited == true)
     {
-        printer = stringcat(printer, 1, " Visitied");
+        printer = stringcat(printer, " Visitied");
     }
     else
     {
-        printer = stringcat(printer, 1, " Not Visited");
+        printer = stringcat(printer, " Not Visited");
     }
     return printer;
 }

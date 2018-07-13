@@ -241,7 +241,7 @@ Strings stringarraysegmentcopy(Strings s, unsigned int start, unsigned int end);
 
    Postconditions: Source is unchanged. Destination is modified with source appended
 **/
-String stringcat(String s, int n, ...);
+String stringcat(String dest, String source);
 
 /**
     Function to convert data in memory to a string
