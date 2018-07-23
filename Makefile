@@ -10,7 +10,6 @@ runprogram:
 	./bin/prog1 > ./bin/mirror_eleven.txt
 
 maketest: 
-	mkdir bin
 	$(CC) $(CFLAGS) -Iinclude -lm src/utilities.c src/HashMap.c src/DynamicString.c src/hypercube1.0.c test/testmain.c -o bin/test
 
 valgringd: maketest mem-err mem-leak

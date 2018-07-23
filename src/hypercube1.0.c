@@ -771,12 +771,20 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
             }
         }
         destroystring(leftRotation);
-        forall(memSize - 1){
+        int countOne = 0;
+        forall(memSize/2){
+            printf("%s %s\n", printPath[countOne], printPath[countOne+1]);
+            countOne += 2;
+        }
+        countOne = 0;
+        /*forall(memSize - 1){
+            //if(x % 2 == 0 && x > 0)printf("\n");
+
             printf("%s\n", printPath[x]);
             if(x == ((2*maxLevel)/2)-1){
                 printf("---------------------------------\n");
             }
-        }
+        }*/
         printf("\n");
         destroystringarray(printPath);
         destroystring(path[maxLevel - 1]);
