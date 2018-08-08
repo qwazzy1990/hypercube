@@ -9,6 +9,8 @@
 #include "HashMap.h"
 #include "DynamicString.h"
 #include "utilities.h"
+#include "Color.h"
+
 
 bool DEBUG1 = false;
 bool FBRFLAG = true;
@@ -676,7 +678,7 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
 {
     String nextString = NULL;
     //if
-    if(n > 1){
+    if(n > 14){
         if(check_necklace(path, binaryString)){
             return;
         }
@@ -687,7 +689,7 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
     //if
     if(n == maxLevel){
         add_to_stringarray(path, binaryString);
-        int count = 0;
+        //int count = 0;
         //while
         /*while(path[count]!=NULL){
             count++;
@@ -739,7 +741,8 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
         }//end check
 
 
-        printf("Path %ld Found:\n", globalCount++);
+        printf("Path %ld Found:\n", (globalCount+1));
+        globalCount++;
         int current = 0;
         int next = 1;
         forall((2*maxLevel)-1){
@@ -771,12 +774,7 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
             }
         }
         destroystring(leftRotation);
-        int countOne = 0;
-        forall(memSize/2){
-            printf("%s %s\n", printPath[countOne], printPath[countOne+1]);
-            countOne += 2;
-        }
-        countOne = 0;
+       
         /*forall(memSize - 1){
             //if(x % 2 == 0 && x > 0)printf("\n");
 
@@ -785,6 +783,7 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
                 printf("---------------------------------\n");
             }
         }*/
+        print_path_two(printPath, 2*maxLevel);
         printf("\n");
         destroystringarray(printPath);
         destroystring(path[maxLevel - 1]);
@@ -1253,7 +1252,31 @@ void generate_hamiltonian_paths(int n, int k)
 
     int maxLevel = number_of_starting_strings(n, k);
     maxLevel = maxLevel/2;
-    back_track_two(map, seed, '0', 1, maxLevel);
+    /*path[0] = stringcopy("00000011111");
+    path[1] = stringcopy("01000011111");
+    path[2] = stringcopy("01000010111");
+    path[3] = stringcopy("11000010111");
+    path[4] = stringcopy("11000010011");
+    path[5] = stringcopy("11000110011");
+    path[6] = stringcopy("11000100011");
+    path[7] = stringcopy("11000101011");
+    path[8] = stringcopy("01000101011");
+    path[9] = stringcopy("01000111011");
+    path[10] = stringcopy("01000110011");
+    path[11] = stringcopy("01000110111");
+    path[12] = stringcopy("00000110111");*/
+    clear(seed);
+    seed = calloc(n, sizeof(char));
+    forall(n){
+        if((x%2)==0){
+            seed[x] = '0';
+        }else{
+            seed[x] = '1';
+        }
+    }
+    seed[n] = '\0';
+
+    back_track_two(map, seed, '0', 1, (maxLevel));
     //back_track_nine(map, seed, '0', 1, number_of_starting_strings(n, k));
     destroystring(seed);
     destroystring(tempString);
@@ -1370,4 +1393,28 @@ Strings cyclic_decomposition(String s)
         destroystring(temp);
     }
     return cycle;
+}
+
+/****PRINTERS***/
+
+void print_path_two(String path[], int size)
+{
+    forall(size-1){
+        if(x == size/2){
+            printf("-------------------\n");
+        }
+        String printer = stringcopy(path[x]);
+        String nextString = stringcopy(path[x+1]);
+        for(int i = 0; i < strlen(printer); i++){
+            if(printer[i] != nextString[i]){
+               // textcolor(2);
+                printf(GREEN "%c" COLOR_RESET, printer[i]);
+            }
+            else{
+                printf("%c", printer[i]);
+            }
+        }
+        printf("\n");
+    }
+    printf("%s\n", path[size-1]);
 }

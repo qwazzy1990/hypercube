@@ -7,7 +7,7 @@ makeprogram:
 	$(CC) $(CFLAGS) -Iinclude -lm src/utilities.c src/HashMap.c src/DynamicString.c src/hypercube1.0.c test/main.c -o bin/prog1
 
 runprogram:
-	./bin/prog1 > ./bin/mirror_eleven.txt
+	./bin/prog1
 
 maketest: 
 	$(CC) $(CFLAGS) -Iinclude -lm src/utilities.c src/HashMap.c src/DynamicString.c src/hypercube1.0.c test/testmain.c -o bin/test

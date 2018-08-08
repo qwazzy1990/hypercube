@@ -18,95 +18,80 @@
 #define NINE true
 #define ELEVEN false
 
-enum vs{DEAD_END, SEED};
+enum vs
+{
+	DEAD_END,
+	SEED
+};
 typedef enum vs VertexStatus;
 
-struct hc{
-    String string;
-    struct hc** neighbors;
-    bool visited;
+struct hc
+{
+	String string;
+	struct hc **neighbors;
+	bool visited;
 	bool seed;
 	bool deadEnd;
 	int len;
 	int kOnes;
 	int numberOfNeighbors;
-};typedef struct hc VertexElement;
+};
+typedef struct hc VertexElement;
 
+typedef VertexElement *CubeVertex;
+typedef CubeVertex *CubeVertecies;
 
-typedef VertexElement* CubeVertex;
-typedef CubeVertex* CubeVertecies;
+/**********CONSTRUCTORS***********/
 
-
-
-							/**********CONSTRUCTORS***********/
-
-	/**
+/**
 	 *Function to generate a seed to create the permutations
 	 *Input: The dimensions of the hyper cube vertex. N = length of binary string representing vertex = 
 	 * dimensions of the Cube. K = Number of 1s in binary string
 	 **/
 CubeVertex generate_seed(int n, int k);
 
-
-
-		/**
+/**
 		 * Function to generate all HyperCube Vertecies of length N with exactly K 1s in them
 		 * */
 CubeVertecies generate_vertecies(int n, int k);
 
 CubeVertex new_vertex(String s);
 
+/***********SETTERS*************/
 
-
-
-
-							/***********SETTERS*************/
-
-							/**
+/**
 							 * Fucntion to set the neighbors of a CubeVertex
 							 * */
 Strings generate_neighbors(String v);
 
-
-							/*********ACCESSORS*********/
+/*********ACCESSORS*********/
 unsigned long n_choose_k(int n, int k);
 
-
-
-
-							
-							/*****PRINTERS*********/
+/*****PRINTERS*********/
 String print_vertex(AnyData v);
 
 void print_path(void);
 
+/***********DESTROYERS*************/
 
-
-						/***********DESTROYERS*************/
-
-void destroy_vertex_real(AnyData* d);
+void destroy_vertex_real(AnyData *d);
 
 void destroy_vertex_update(AnyData d);
 
-
-						/**************CLONERS***********/
+/**************CLONERS***********/
 
 CubeVertex clone_vertext(CubeVertex v);
 
-
-						/**********BACK TRACKING ALGORITHM************/
+/**********BACK TRACKING ALGORITHM************/
 void back_track(HashMap map, String binaryString, int n, char bit, int maxDepth);
 
-void set_bit(String* s, int n);
+void set_bit(String *s, int n);
 
-
-
-						/****************MODULE****************/
+/****************MODULE****************/
 
 void generate_hamiltonian_paths(int n, int k);
 
-
-						/************MODIFIERS DYK_WORD*************/
+/************MODIFIERS DYK_WORD*************/
 
 String zero_dyk_word(String s);
 
@@ -114,21 +99,23 @@ String one_dyk_word(String s);
 
 Strings cyclic_decomposition(String s);
 
+/******************TEST FUNCTION FOR N = 7**************/
 
+Strings test_7(void);
 
-					/******************TEST FUNCTION FOR N = 7**************/
-
-Strings test_7( void );
-
-				/******TEST FOR N = 9*****/
+/******TEST FOR N = 9*****/
 
 void back_track_nine(HashMap map, String binaryString, char bit, int n, int maxLevel);
 
 void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLevel);
 
-Strings test_9( void );
+Strings test_9(void);
 
 bool is_necklace(String set, String s);
 
-#endif
 
+/*****PRINTERS*****/
+
+void print_path_two(String path[], int size);
+
+#endif
