@@ -270,8 +270,8 @@ void destroystringarray_real(Strings* s)
     int i = 0;
     Strings temp = (Strings)(*s);
     while(temp[i] != NULL){
-        destroystring(temp[i]);
-	i++;
+        clear(temp[i]);
+	    i++;
     }
     free(*s);
     *s = NULL;
@@ -438,8 +438,9 @@ String stringcat(String dest, String source)
         return dest;
     }
     if(stringlen(dest) <= 0){
-        //clear(dest);
-        dest = stringcopy(source);
+        forall(stringlen(source)+1){
+            dest[x] = source[x];
+        }
         return dest;
     }
 

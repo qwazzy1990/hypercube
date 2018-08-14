@@ -7,7 +7,7 @@
 #include "utilities.h"
 #include "HashMap.h"
 #include "hypercube1.0.h"
-
+#include "StringBitPosition.h"
 
 int main(int argc, char* argv[])
 {

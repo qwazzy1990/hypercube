@@ -7,6 +7,7 @@
 #include "utilities.h"
 #include "HashMap.h"
 #include "hypercube1.0.h"
+#include "StringBitPosition.h"
 
 
 bool debug1 = false;
@@ -14,10 +15,10 @@ bool debug2 = false;
 bool debug3  = false;
 bool debug4 = false;
 bool debug5 = false;
-bool debug6 = true;
+bool debug6 = false;
 bool debug7 = false;
 bool debug9 = false;
-
+bool debug10 = true;
 
 //github why
 //plase
@@ -111,7 +112,7 @@ int main(int argc, String argv[])
     Strings cycle = cyclic_decomposition(temp);
     //Strings cycle2 = cyclic_decomposition(temp2);
     String printer = printstringarray(cycle);
-    printer = stringcat(printer, 1, "Cyclic Decomposition using Dyk Word\n");
+    printer = stringcat(printer, "Cyclic Decomposition using Dyk Word\n");
     //printer = reversestring(printer);
     //String printer2 = printstringarray(cycle2);
     //printer = stringcat(printer, printer2);
@@ -126,7 +127,7 @@ int main(int argc, String argv[])
     
   }
   if(debug6){
-  
+    
     generate_hamiltonian_paths(7, 3);
   }
   if(debug7){
@@ -135,6 +136,29 @@ int main(int argc, String argv[])
   }
   if(debug9){
      test_9();
+  }
+  if(debug10){
+    StringBitContainer sbc = new_string_bit_container(5, dummy_print, dummy_delete, dummy_compare);
+
+    new_object(Strings, path, 6);
+    path[0] = stringcopy("0101010 3");
+    path[1] = stringcopy("0111010 4");
+    path[2] = stringcopy("0110010 1");
+    path[3] = stringcopy("1110010 6");
+    path[4] = stringcopy("1110000 4");
+    path[5] = NULL;
+    //printf("%s\n", path[4]);
+
+    add_string_bit_pair(sbc, path, 1);
+    String printer = print_string_bit_container(sbc);
+    printf("%s\n", printer);
+    clear(printer);
+    /*ListNode tempNode = sbc->stringBitPositions[0]->bitPathPairs->head;
+    BitPathPairs bbp = tempNode->data;
+    printf("CHECK CHECK %d\n", bbp->bitNumber);
+    //print_bit_path_pairs(sbc->stringBitPositions[0]->bitPathPairs);*/
+    destroy_string_bit_container(sbc);
+    destroystringarray(path);
   }
   return 0;
 }

@@ -10,6 +10,7 @@
 #include "DynamicString.h"
 #include "utilities.h"
 #include "Color.h"
+#include "StringBitPosition.h"
 
 
 bool DEBUG1 = false;
@@ -457,6 +458,8 @@ Strings test_9(void)
     return NULL;
 }
 
+
+
 static bool check_necklace(Strings startingSet, String s)
 {
     int i = 0;
@@ -784,6 +787,7 @@ void back_track_two(HashMap map, String binaryString, char bit, int n, int maxLe
             }
         }*/
         print_path_two(printPath, 2*maxLevel);
+        
         printf("\n");
         destroystringarray(printPath);
         destroystring(path[maxLevel - 1]);

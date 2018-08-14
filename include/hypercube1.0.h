@@ -11,6 +11,7 @@
 #include "DynamicString.h"
 #include "utilities.h"
 #include "HashMap.h"
+#include "StringBitPosition.h"
 
 #define destroy_vertex(myarg) destroy_vertex_real(&myarg)
 
@@ -40,6 +41,7 @@ typedef struct hc VertexElement;
 
 typedef VertexElement *CubeVertex;
 typedef CubeVertex *CubeVertecies;
+
 
 /**********CONSTRUCTORS***********/
 

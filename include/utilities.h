@@ -83,7 +83,7 @@ struct i{
 		 *
 		 * **/
 typedef void (*SwapFunc)(AnyData a, AnyData b);
-typedef int (*CompareFunc)(AnyData a, AnyData b);
+typedef int (*CompareFunc)(const void* a, const void* b);
 typedef char* (*PrintFunc)(AnyData data);
 typedef void (*DeleteFunc)(AnyData data);
 typedef void* (*CloneFunc)(AnyData data);
